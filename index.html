@@ -66,7 +66,6 @@
 </head>
 <body id="main-body" class="h-screen flex flex-col relative select-none">
 
-    <!-- Bloqueio Anti-Cópia -->
     <script>
         document.addEventListener('contextmenu', event => event.preventDefault()); 
         document.addEventListener('keydown', event => {
@@ -85,20 +84,16 @@
     <!-- Ecrã Inicial -->
     <div id="menu-screen" class="z-10 bg-slate-800/95 p-6 md:p-8 rounded-2xl shadow-2xl text-center max-w-md w-[95%] md:w-full border border-slate-700 m-auto mt-10 md:mt-auto relative">
         <button onclick="showTutorial()" class="absolute top-4 right-4 bg-slate-700 hover:bg-slate-600 w-8 h-8 rounded-full font-bold text-amber-400 border border-slate-500">?</button>
-        
         <h1 class="text-3xl md:text-4xl font-extrabold mb-1 text-amber-500 tracking-wider">CARTAS DE CONFRONTO</h1>
         <p class="text-slate-400 text-xs mb-4 uppercase tracking-widest">Arena de Duelo</p>
-        
         <div class="bg-slate-900 border border-slate-700 rounded-lg p-2 mb-5 flex justify-around text-xs font-bold text-slate-300">
             <div>🏆 Vitórias: <span id="menu-wins" class="text-emerald-400">0</span></div>
             <div>💀 Derrotas: <span id="menu-losses" class="text-red-400">0</span></div>
         </div>
-        
         <div class="mb-5 text-left">
             <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Seu Nome / Apelido</label>
             <input type="text" id="player-nickname" value="Guerreiro" class="w-full bg-slate-950 border border-slate-600 rounded-lg p-2.5 text-white font-bold focus:outline-none focus:border-amber-500">
         </div>
-
         <div class="flex flex-col gap-2.5">
             <button onclick="selectMode('bot', 0.7)" class="bg-emerald-600 hover:bg-emerald-500 py-2.5 rounded-lg font-bold text-sm text-white">🤖 Bot Fácil (70%)</button>
             <button onclick="selectMode('bot', 0.8)" class="bg-blue-600 hover:bg-blue-500 py-2.5 rounded-lg font-bold text-sm text-white">🤖 Bot Médio (80%)</button>
@@ -115,8 +110,7 @@
             <div class="mb-4">
                 <button onclick="createOnlineRoom()" class="w-full bg-emerald-600 hover:bg-emerald-500 py-2.5 rounded-lg font-bold mb-2 text-white">Criar Sala (Host)</button>
                 <div id="room-code-display" class="text-sm text-slate-300 hidden mt-2">
-                    Código da Sala:<br>
-                    <b id="generated-code" class="text-amber-400 text-2xl select-all block my-2 tracking-widest">---</b>
+                    Código da Sala:<br><b id="generated-code" class="text-amber-400 text-2xl select-all block my-2 tracking-widest">---</b>
                     <button onclick="copyRoomCode()" class="bg-slate-700 hover:bg-slate-600 text-xs py-1 px-3 rounded-full font-bold mt-2">📋 Copiar Código</button>
                 </div>
             </div>
@@ -138,16 +132,15 @@
                 <p><b>⚡ Pontos de Ação (AP):</b> Tem 3 AP por turno. Cartas normais custam 1 ou 2 AP. Suprema (10) custa 3 AP.</p>
                 <p><b>🛡️ Escudo vs Vida:</b> O Escudo absorve dano antes da Vida. A classe <i>Mago</i> ignora Escudos.</p>
                 <p><b>🌍 Terrenos (A, J, Q, K):</b> Custam 2 AP e mudam as regras para AMBOS até outro terreno ser jogado.</p>
-                <p><b>🌟 Poder Supremo:</b> A cada 5 turnos a sua habilidade é desbloqueada. Ela não custa AP (Grátis) e causa um efeito devastador!</p>
+                <p><b>🌟 Poder Supremo (Novo):</b> O poder da sua classe só é ativado a cada 5 turnos. Ele é totalmente <b>grátis (0 AP)</b> e causa um impacto massivo na batalha!</p>
             </div>
         </div>
     </div>
 
-    <!-- Seleção de Classe (CORRIGIDO: Cores dos Nomes e Descrições) -->
+    <!-- SELEÇÃO DE CLASSE: TEXTOS DE HABILIDADE CORRIGIDOS PARA O EFEITO SUPREMO -->
     <div id="class-screen" class="hidden z-10 bg-slate-800/95 p-4 md:p-6 rounded-2xl shadow-2xl text-center max-w-4xl w-[95%] md:w-full border border-slate-700 m-auto mt-10 md:mt-auto relative">
         <button onclick="goBackToMenu()" class="absolute top-4 left-4 bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded-lg font-bold text-slate-300 border border-slate-500 text-xs flex items-center gap-1">⬅️ Voltar</button>
         <h2 id="class-title" class="text-2xl md:text-3xl font-bold mb-4 md:mb-6 mt-6 md:mt-0 text-amber-500">Escolha sua Classe</h2>
-        
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
             <div onclick="chooseClass('Espadas')" class="bg-slate-900 hover:bg-slate-700/80 p-2 md:p-3 rounded-xl cursor-pointer border border-slate-700 hover:border-amber-500 transition flex flex-col items-center">
                 <img src="cavaleiro.png" onerror="this.src='cavaleiro.jpg'" class="class-card-img mb-2 shadow-md">
@@ -231,7 +224,6 @@
 
         <div class="bg-slate-900/90 border-t border-slate-800 p-2 md:p-3 pt-3 md:pt-4 relative z-20">
             <div class="flex justify-between items-end mb-2 md:mb-3 px-2 md:px-4 relative" id="p1-target">
-                
                 <div class="flex items-center gap-2 md:gap-3">
                     <img id="p1-avatar" class="w-14 h-14 md:w-16 md:h-16 rounded-full border-2 border-emerald-500 object-cover object-top shadow-lg">
                     <div class="w-32 md:w-48">
@@ -257,9 +249,9 @@
                 </div>
 
                 <div class="text-center flex gap-2 md:flex-col items-center">
-                    <!-- BOTÃO DO PODER ATUALIZADO PARA A LÓGICA DE BLOQUEIO -->
+                    <!-- BOTÃO DO PODER -->
                     <button id="hero-power-btn" onclick="useHeroPower()" class="bg-slate-700 border border-slate-600 text-slate-400 text-[10px] md:text-xs font-bold py-1.5 md:py-2 px-2 md:px-4 rounded-lg md:rounded-xl transition shadow flex flex-col items-center opacity-50 cursor-not-allowed">
-                        <span id="hero-power-name" class="uppercase">Poder</span>
+                        <span id="hero-power-name" class="uppercase">Poder Supremo</span>
                         <span id="hero-power-cost" class="text-[8px] md:text-[10px] mt-0.5 font-bold text-amber-400">Em 4 Turnos</span>
                     </button>
                     <button onclick="endTurn()" class="md:hidden bg-amber-600 text-white font-bold py-1.5 px-3 rounded-lg border border-amber-400 text-[10px]">Passar</button>
@@ -471,7 +463,7 @@
         const classNames = { 'Espadas': 'Cavaleiro', 'Paus': 'Besta', 'Copas': 'Paladino', 'Ouros': 'Mago' };
         const classMaxHp = { 'Espadas': 40, 'Paus': 50, 'Copas': 30, 'Ouros': 30 };
         
-        // CORREÇÃO: Nomes e habilidades supremas redefinidas para o sistema bloqueado a cada 5 turnos
+        // HABILIDADES SUPREMAS REFEITAS (Apenas mostradas e ativadas no Turno 5)
         const heroPowers = {
             'Espadas': { name: 'Escudo Divino', cost: 0, desc: '+4 Armadura' },
             'Paus': { name: 'Faro Cego', cost: 0, desc: 'Compra 2 Cartas' },
@@ -665,25 +657,31 @@
             updateHealthBar(gameState.p1.hp, gameState.p1.maxHp, 'p1-health-fill');
             updateManaPips(); document.getElementById('p1-deck-count').innerText = gameState.p1.deck.length;
 
-            // LÓGICA DE BLOQUEIO DO PODER ESPECIAL (Apenas no Turno 5, 10, 15...)
             const hpBtn = document.getElementById('hero-power-btn');
+            
+            // LÓGICA RIGOROSA DOS TURNOS (O botão só fica disponível no Turno 5, 10, 15...)
             const isSpecialTurn = (gameState.p1.turns > 0 && gameState.p1.turns % 5 === 0);
             
-            // Calculadora visual para saber quantos turnos faltam para o jogador
+            // Calcula visualmente quantos turnos faltam (Ex: Turno 1 -> Faltam 4, Turno 2 -> Faltam 3)
             let turnsLeft = 5 - (gameState.p1.turns % 5);
-            if (isSpecialTurn && gameState.p1.powerUsed) turnsLeft = 5; // Se já usou no turno 5, faltam 5 de novo visualmente
+            if (isSpecialTurn && gameState.p1.powerUsed) turnsLeft = 5; // Se já usou no turno 5, diz que faltam 5 para o próximo
+            if (isSpecialTurn && !gameState.p1.powerUsed) turnsLeft = 0; // Se é o turno 5 e não usou, faltam 0
             
+            // SE É O TURNO 5 E AINDA NÃO USOU
             if (isSpecialTurn && !gameState.p1.powerUsed && currentTurn === 'p1') {
-                // HABILIDADE DESBLOQUEADA E PRONTA A USAR
                 hpBtn.className = "bg-amber-500 hover:bg-amber-400 border border-amber-300 text-slate-900 text-[10px] md:text-xs font-bold py-1.5 md:py-2 px-2 md:px-4 rounded-lg md:rounded-xl transition shadow flex flex-col items-center animate-pulse";
                 document.getElementById('hero-power-name').innerText = heroPowers[gameState.p1.class].name;
                 document.getElementById('hero-power-cost').innerText = "CLIQUE (GRÁTIS)";
                 hpBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-            } else {
-                // HABILIDADE BLOQUEADA (Turnos 1, 2, 3, 4, ou se já a usou no turno 5)
-                hpBtn.className = "bg-slate-700 border border-slate-600 text-slate-400 text-[10px] md:text-xs font-bold py-1.5 md:py-2 px-2 md:px-4 rounded-lg md:rounded-xl transition shadow flex flex-col items-center opacity-50 cursor-not-allowed";
+                hpBtn.disabled = false;
+            } 
+            // SE AINDA FALTAM TURNOS (OU SE JÁ USOU NESTE)
+            else {
+                hpBtn.className = "bg-slate-700 border border-slate-600 text-slate-400 text-[10px] md:text-xs font-bold py-1.5 md:py-2 px-2 md:px-4 rounded-lg md:rounded-xl shadow flex flex-col items-center opacity-50 cursor-not-allowed";
                 document.getElementById('hero-power-name').innerText = heroPowers[gameState.p1.class].name;
-                document.getElementById('hero-power-cost').innerText = `Em ${turnsLeft} Turno(s)`;
+                document.getElementById('hero-power-cost').innerText = `Em ${turnsLeft} Turnos`;
+                hpBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                hpBtn.disabled = true;
             }
 
             document.getElementById('p2-hp').innerText = gameState.p2.hp; document.getElementById('p2-shield').innerText = gameState.p2.shield; 
@@ -707,7 +705,7 @@
                 const cardDiv = document.createElement('div');
                 let icon = '🃏';
                 if (!card.isJoker) {
-                    if (card.suit === 'Espadas') icon = '♠️️';
+                    if (card.suit === 'Espadas') icon = '♠️';
                     else if (card.suit === 'Paus') icon = '♣️';
                     else if (card.suit === 'Copas') icon = '♥️';
                     else if (card.suit === 'Ouros') icon = '♦️';
@@ -758,15 +756,14 @@
             const entry = document.createElement('div'); entry.innerHTML = msg; log.prepend(entry);
         }
 
-        // --- CORREÇÃO: A HABILIDADE AGORA É EXCLUSIVA A CADA 5 TURNOS E GRÁTIS ---
+        // --- LÓGICA DO PODER (SÓ EXECUTA SE FOR O TURNO 5) ---
         function useHeroPower(who = 'p1') {
             let state = gameState[who];
             let isSpecialTurn = (state.turns > 0 && state.turns % 5 === 0);
             
-            // SE NÃO FOR O TURNO 5, OU SE JÁ USOU, OU SE NÃO FOR O SEU TURNO -> BLOQUEIA O CLIQUE!
+            // Barreira de segurança extra: Se não for o turno 5, ou já usou, cancela imediatamente.
             if (!isSpecialTurn || state.powerUsed || currentTurn !== who) return;
             
-            // Não subtrai AP porque a habilidade agora custa 0!
             state.powerUsed = true;
             let targetKey = who === 'p1' ? 'p2' : 'p1'; let target = gameState[targetKey];
             let nameLabel = who === 'p1' ? p1Name : p2Name;
@@ -777,7 +774,7 @@
             if (state.class === 'Espadas') { 
                 let s = 4; if(gameState.terrain?.value==='A') s+=2; 
                 state.shield += s;
-                createFloatingText(`${who}-target`, `🛡️️ +${s}`, 'text-blue-400'); playSfx('shield');
+                createFloatingText(`${who}-target`, `🛡 +${s}`, 'text-blue-400'); playSfx('shield');
             } 
             else if (state.class === 'Paus') { 
                 drawCards(who, 2); 
@@ -897,9 +894,9 @@
         function botTurn() {
             let state = gameState.p2; let attempts = 0;
             
-            // Bot também ganha o poder especial grátis a cada 5 turnos
             let isSpecialTurn = (state.turns > 0 && state.turns % 5 === 0);
             
+            // Bot usa a habilidade se for o turno 5 (grátis) e não usou ainda
             if (isSpecialTurn && !state.powerUsed) { 
                 processHeroPower('p2'); 
             }
