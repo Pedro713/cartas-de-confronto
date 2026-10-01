@@ -138,12 +138,12 @@
                 <p><b>⚡ Pontos de Ação (AP):</b> Tem 3 AP por turno. Cartas normais custam 1 ou 2 AP. Suprema (10) custa 3 AP.</p>
                 <p><b>🛡️ Escudo vs Vida:</b> O Escudo absorve dano antes da Vida. A classe <i>Mago</i> ignora Escudos.</p>
                 <p><b>🌍 Terrenos (A, J, Q, K):</b> Custam 2 AP e mudam as regras para AMBOS até outro terreno ser jogado.</p>
-                <p><b>🌟 Poder da Classe:</b> A cada 5 turnos, o seu Poder Especial transforma-se, o seu efeito é duplicado (2X) e fica totalmente GRÁTIS (0 AP)!</p>
+                <p><b>🌟 Poder Supremo:</b> A cada 5 turnos a sua habilidade é desbloqueada. Ela não custa AP (Grátis) e causa um efeito devastador!</p>
             </div>
         </div>
     </div>
 
-    <!-- Seleção de Classe (CORRIGIDO: Cores para Cavaleiro e Besta agora são da mesma cor dos seus naipes) -->
+    <!-- Seleção de Classe (CORRIGIDO: Cores dos Nomes e Descrições) -->
     <div id="class-screen" class="hidden z-10 bg-slate-800/95 p-4 md:p-6 rounded-2xl shadow-2xl text-center max-w-4xl w-[95%] md:w-full border border-slate-700 m-auto mt-10 md:mt-auto relative">
         <button onclick="goBackToMenu()" class="absolute top-4 left-4 bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded-lg font-bold text-slate-300 border border-slate-500 text-xs flex items-center gap-1">⬅️ Voltar</button>
         <h2 id="class-title" class="text-2xl md:text-3xl font-bold mb-4 md:mb-6 mt-6 md:mt-0 text-amber-500">Escolha sua Classe</h2>
@@ -151,23 +151,23 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
             <div onclick="chooseClass('Espadas')" class="bg-slate-900 hover:bg-slate-700/80 p-2 md:p-3 rounded-xl cursor-pointer border border-slate-700 hover:border-amber-500 transition flex flex-col items-center">
                 <img src="cavaleiro.png" onerror="this.src='cavaleiro.jpg'" class="class-card-img mb-2 shadow-md">
-                <span class="font-bold text-sm md:text-base text-slate-400">♠️ Cavaleiro (40 HP)</span>
-                <span class="text-[9px] md:text-[10px] text-amber-400 mt-1 uppercase font-bold">Poder: +2 Armadura</span>
+                <span class="font-bold text-sm md:text-base suit-black">♠️ Cavaleiro (40 HP)</span>
+                <span class="text-[9px] md:text-[10px] text-amber-400 mt-1 uppercase font-bold">Poder: +4 Armadura</span>
             </div>
             <div onclick="chooseClass('Paus')" class="bg-slate-900 hover:bg-slate-700/80 p-2 md:p-3 rounded-xl cursor-pointer border border-slate-700 hover:border-amber-500 transition flex flex-col items-center">
                 <img src="besta.png" onerror="this.src='besta.jpg'" class="class-card-img mb-2 shadow-md">
-                <span class="font-bold text-sm md:text-base text-slate-400">♣️ Besta (50 HP)</span>
-                <span class="text-[9px] md:text-[10px] text-amber-400 mt-1 uppercase font-bold">Poder: -2 HP = Compra 1</span>
+                <span class="font-bold text-sm md:text-base suit-black">♣️ Besta (50 HP)</span>
+                <span class="text-[9px] md:text-[10px] text-amber-400 mt-1 uppercase font-bold">Poder: Compra 2 Cartas</span>
             </div>
             <div onclick="chooseClass('Copas')" class="bg-slate-900 hover:bg-slate-700/80 p-2 md:p-3 rounded-xl cursor-pointer border border-slate-700 hover:border-amber-500 transition flex flex-col items-center">
                 <img src="paladino.png" onerror="this.src='paladino.jpg'" class="class-card-img mb-2 shadow-md">
                 <span class="font-bold text-sm md:text-base text-red-400">♥️ Paladino (30 HP)</span>
-                <span class="text-[9px] md:text-[10px] text-amber-400 mt-1 uppercase font-bold">Poder: +2 Cura</span>
+                <span class="text-[9px] md:text-[10px] text-amber-400 mt-1 uppercase font-bold">Poder: +4 Cura</span>
             </div>
             <div onclick="chooseClass('Ouros')" class="bg-slate-900 hover:bg-slate-700/80 p-2 md:p-3 rounded-xl cursor-pointer border border-slate-700 hover:border-amber-500 transition flex flex-col items-center">
                 <img src="mago.png" onerror="this.src='mago.jpg'" class="class-card-img mb-2 shadow-md">
                 <span class="font-bold text-sm md:text-base text-red-400">♦️ Mago (30 HP)</span>
-                <span class="text-[9px] md:text-[10px] text-amber-400 mt-1 uppercase font-bold">Poder: 3 Dano (Perf)</span>
+                <span class="text-[9px] md:text-[10px] text-amber-400 mt-1 uppercase font-bold">Poder: 6 Dano (Perf)</span>
             </div>
         </div>
     </div>
@@ -202,7 +202,7 @@
                                 <div id="p2-health-fill" class="health-bar-fill bg-green-500" style="width: 100%;"></div>
                             </div>
                             <div class="flex items-center gap-2 md:gap-4 mt-1 text-[10px] md:text-xs font-bold">
-                                <span>❤️️ <b id="p2-hp">40</b></span>
+                                <span>❤ <b id="p2-hp">40</b></span>
                                 <span class="text-blue-400">🛡 <b id="p2-shield">0</b></span>
                             </div>
                         </div>
@@ -257,9 +257,10 @@
                 </div>
 
                 <div class="text-center flex gap-2 md:flex-col items-center">
-                    <button id="hero-power-btn" onclick="useHeroPower()" class="bg-indigo-700 hover:bg-indigo-600 border border-indigo-400 text-white text-[10px] md:text-xs font-bold py-1.5 md:py-2 px-2 md:px-4 rounded-lg md:rounded-xl transition shadow flex flex-col items-center">
+                    <!-- BOTÃO DO PODER ATUALIZADO PARA A LÓGICA DE BLOQUEIO -->
+                    <button id="hero-power-btn" onclick="useHeroPower()" class="bg-slate-700 border border-slate-600 text-slate-400 text-[10px] md:text-xs font-bold py-1.5 md:py-2 px-2 md:px-4 rounded-lg md:rounded-xl transition shadow flex flex-col items-center opacity-50 cursor-not-allowed">
                         <span id="hero-power-name" class="uppercase">Poder</span>
-                        <span id="hero-power-cost" class="text-[8px] md:text-[10px] mt-0.5 opacity-80">2 AP</span>
+                        <span id="hero-power-cost" class="text-[8px] md:text-[10px] mt-0.5 font-bold text-amber-400">Em 4 Turnos</span>
                     </button>
                     <button onclick="endTurn()" class="md:hidden bg-amber-600 text-white font-bold py-1.5 px-3 rounded-lg border border-amber-400 text-[10px]">Passar</button>
                     <div class="text-[10px] md:text-xs text-slate-500 font-bold mt-1 hidden md:block">Baralho: <b id="p1-deck-count" class="text-white">0</b></div>
@@ -470,11 +471,12 @@
         const classNames = { 'Espadas': 'Cavaleiro', 'Paus': 'Besta', 'Copas': 'Paladino', 'Ouros': 'Mago' };
         const classMaxHp = { 'Espadas': 40, 'Paus': 50, 'Copas': 30, 'Ouros': 30 };
         
+        // CORREÇÃO: Nomes e habilidades supremas redefinidas para o sistema bloqueado a cada 5 turnos
         const heroPowers = {
-            'Espadas': { name: 'Postura', cost: 2, desc: '+2 Armadura' },
-            'Paus': { name: 'Pacto', cost: 2, desc: '-2 HP, Compra 1' },
-            'Copas': { name: 'Luz', cost: 2, desc: '+2 HP' },
-            'Ouros': { name: 'Arcano', cost: 2, desc: '3 Dano (Perf)' }
+            'Espadas': { name: 'Escudo Divino', cost: 0, desc: '+4 Armadura' },
+            'Paus': { name: 'Faro Cego', cost: 0, desc: 'Compra 2 Cartas' },
+            'Copas': { name: 'Luz Divina', cost: 0, desc: '+4 HP' },
+            'Ouros': { name: 'Arcano Maior', cost: 0, desc: '6 Dano (Perf)' }
         };
 
         let gameMode = 'bot'; let botDifficulty = 0.7; 
@@ -663,27 +665,25 @@
             updateHealthBar(gameState.p1.hp, gameState.p1.maxHp, 'p1-health-fill');
             updateManaPips(); document.getElementById('p1-deck-count').innerText = gameState.p1.deck.length;
 
+            // LÓGICA DE BLOQUEIO DO PODER ESPECIAL (Apenas no Turno 5, 10, 15...)
             const hpBtn = document.getElementById('hero-power-btn');
+            const isSpecialTurn = (gameState.p1.turns > 0 && gameState.p1.turns % 5 === 0);
             
-            // VERIFICAÇÃO DO PODER ESPECIAL (Turno 5, 10, 15...)
-            const isSpecial = (gameState.p1.turns > 0 && gameState.p1.turns % 5 === 0);
-            let powerCost = isSpecial ? 0 : 2; // Custo GRÁTIS se for especial
+            // Calculadora visual para saber quantos turnos faltam para o jogador
+            let turnsLeft = 5 - (gameState.p1.turns % 5);
+            if (isSpecialTurn && gameState.p1.powerUsed) turnsLeft = 5; // Se já usou no turno 5, faltam 5 de novo visualmente
             
-            if (isSpecial) {
+            if (isSpecialTurn && !gameState.p1.powerUsed && currentTurn === 'p1') {
+                // HABILIDADE DESBLOQUEADA E PRONTA A USAR
                 hpBtn.className = "bg-amber-500 hover:bg-amber-400 border border-amber-300 text-slate-900 text-[10px] md:text-xs font-bold py-1.5 md:py-2 px-2 md:px-4 rounded-lg md:rounded-xl transition shadow flex flex-col items-center animate-pulse";
-                document.getElementById('hero-power-name').innerText = heroPowers[gameState.p1.class].name + " 2X!";
-                document.getElementById('hero-power-cost').innerText = "GRÁTIS!";
-            } else {
-                hpBtn.className = "bg-indigo-700 hover:bg-indigo-600 border border-indigo-400 text-white text-[10px] md:text-xs font-bold py-1.5 md:py-2 px-2 md:px-4 rounded-lg md:rounded-xl transition shadow flex flex-col items-center";
                 document.getElementById('hero-power-name').innerText = heroPowers[gameState.p1.class].name;
-                document.getElementById('hero-power-cost').innerText = "2 AP";
-            }
-
-            // Habilita o botão se tiver AP suficiente (ou se for grátis) e não tiver sido usado
-            if (gameState.p1.ap >= powerCost && !gameState.p1.powerUsed && currentTurn === 'p1') {
+                document.getElementById('hero-power-cost').innerText = "CLIQUE (GRÁTIS)";
                 hpBtn.classList.remove('opacity-50', 'cursor-not-allowed');
             } else {
-                hpBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                // HABILIDADE BLOQUEADA (Turnos 1, 2, 3, 4, ou se já a usou no turno 5)
+                hpBtn.className = "bg-slate-700 border border-slate-600 text-slate-400 text-[10px] md:text-xs font-bold py-1.5 md:py-2 px-2 md:px-4 rounded-lg md:rounded-xl transition shadow flex flex-col items-center opacity-50 cursor-not-allowed";
+                document.getElementById('hero-power-name').innerText = heroPowers[gameState.p1.class].name;
+                document.getElementById('hero-power-cost').innerText = `Em ${turnsLeft} Turno(s)`;
             }
 
             document.getElementById('p2-hp').innerText = gameState.p2.hp; document.getElementById('p2-shield').innerText = gameState.p2.shield; 
@@ -707,7 +707,7 @@
                 const cardDiv = document.createElement('div');
                 let icon = '🃏';
                 if (!card.isJoker) {
-                    if (card.suit === 'Espadas') icon = '♠️';
+                    if (card.suit === 'Espadas') icon = '♠️️';
                     else if (card.suit === 'Paus') icon = '♣️';
                     else if (card.suit === 'Copas') icon = '♥️';
                     else if (card.suit === 'Ouros') icon = '♦️';
@@ -758,47 +758,38 @@
             const entry = document.createElement('div'); entry.innerHTML = msg; log.prepend(entry);
         }
 
-        // --- LÓGICA DO PODER REFEITA COM CUSTO GRÁTIS NO TURNO 5 ---
+        // --- CORREÇÃO: A HABILIDADE AGORA É EXCLUSIVA A CADA 5 TURNOS E GRÁTIS ---
         function useHeroPower(who = 'p1') {
             let state = gameState[who];
-            let isSpecial = (state.turns > 0 && state.turns % 5 === 0);
-            let cost = isSpecial ? 0 : 2; // Custo dinâmico
+            let isSpecialTurn = (state.turns > 0 && state.turns % 5 === 0);
             
-            // Verifica se tem AP suficiente para o custo e se já não foi usado
-            if (state.ap < cost || state.powerUsed || currentTurn !== who) return;
+            // SE NÃO FOR O TURNO 5, OU SE JÁ USOU, OU SE NÃO FOR O SEU TURNO -> BLOQUEIA O CLIQUE!
+            if (!isSpecialTurn || state.powerUsed || currentTurn !== who) return;
             
-            state.ap -= cost; 
+            // Não subtrai AP porque a habilidade agora custa 0!
             state.powerUsed = true;
             let targetKey = who === 'p1' ? 'p2' : 'p1'; let target = gameState[targetKey];
             let nameLabel = who === 'p1' ? p1Name : p2Name;
             
-            logAction(`⚡ <b>${nameLabel}</b> usou ${isSpecial ? 'Poder ESPECIAL (Grátis)!' : 'Poder!'}`);
+            logAction(`⚡ <b>${nameLabel}</b> ativou o Poder Supremo (Grátis)!`);
             playSfx('power');
 
             if (state.class === 'Espadas') { 
-                let s = 2; if(gameState.terrain?.value==='A') s+=2; 
-                if(isSpecial) s *= 2; 
+                let s = 4; if(gameState.terrain?.value==='A') s+=2; 
                 state.shield += s;
-                createFloatingText(`${who}-target`, `🛡️ +${s}`, 'text-blue-400'); playSfx('shield');
+                createFloatingText(`${who}-target`, `🛡️️ +${s}`, 'text-blue-400'); playSfx('shield');
             } 
             else if (state.class === 'Paus') { 
-                if(isSpecial) {
-                    drawCards(who, 2); 
-                    createFloatingText(`${who}-target`, '🃏 +2 Cartas', 'text-amber-400');
-                } else {
-                    state.hp -= 2; drawCards(who, 1); 
-                    createFloatingText(`${who}-target`, '🩸 -2', 'text-red-500'); playSfx('damage');
-                }
+                drawCards(who, 2); 
+                createFloatingText(`${who}-target`, '🃏 +2 Cartas', 'text-amber-400');
             } 
             else if (state.class === 'Copas') { 
-                let h = 2; if(gameState.terrain?.value==='A') h+=2; 
-                if(isSpecial) h *= 2; 
+                let h = 4; if(gameState.terrain?.value==='A') h+=2; 
                 state.hp = Math.min(state.maxHp, state.hp + h); 
                 createFloatingText(`${who}-target`, `💚 +${h}`, 'text-green-400'); playSfx('heal');
             } 
             else if (state.class === 'Ouros') { 
-                let d = 3; if(gameState.terrain?.value==='K') d+=2; if(gameState.terrain?.value==='Q') d=Math.max(0, d-1); 
-                if(isSpecial) d *= 2; 
+                let d = 6; if(gameState.terrain?.value==='K') d+=2; if(gameState.terrain?.value==='Q') d=Math.max(0, d-1); 
                 target.hp -= d; 
                 createFloatingText(`${targetKey}-target`, `💥 -${d}`, 'text-purple-400'); triggerShake(`${targetKey}-target`); playSfx('damage');
             }
@@ -906,11 +897,10 @@
         function botTurn() {
             let state = gameState.p2; let attempts = 0;
             
-            // Bot também ganha o poder especial grátis!
-            let isSpecial = (state.turns > 0 && state.turns % 5 === 0);
-            let powerCost = isSpecial ? 0 : 2;
+            // Bot também ganha o poder especial grátis a cada 5 turnos
+            let isSpecialTurn = (state.turns > 0 && state.turns % 5 === 0);
             
-            if (state.ap >= powerCost && Math.random() < botDifficulty && !state.powerUsed) { 
+            if (isSpecialTurn && !state.powerUsed) { 
                 processHeroPower('p2'); 
             }
 
