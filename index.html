@@ -79,7 +79,7 @@
     <div id="vfx-layer" class="fixed inset-0 z-[55] pointer-events-none overflow-hidden hidden"></div>
 
     <div id="timer-display" class="fixed top-14 left-1/2 transform -translate-x-1/2 bg-slate-900 border border-amber-500 px-4 py-1.5 rounded-full text-amber-500 font-bold z-[60] shadow-xl hidden flex items-center gap-2">
-        <span>⏱️</span> <span id="time-left">15</span>s
+        <span>⏱️️</span> <span id="time-left">15</span>s
     </div>
 
     <!-- Ecrã Inicial -->
@@ -133,7 +133,7 @@
                 <p><b>⚡ Pontos de Ação (AP):</b> Tem 3 AP por turno. Cartas normais custam 1 ou 2 AP. Suprema (10) custa 3 AP.</p>
                 <p><b>🛡️ Escudo vs Vida:</b> O Escudo absorve dano antes da Vida. A classe <i>Mago</i> ignora Escudos.</p>
                 <p><b>🌍 Terrenos (A, J, Q, K):</b> Custam 2 AP e mudam as regras para AMBOS até outro terreno ser jogado.</p>
-                <p><b>🌟 Poder Supremo:</b> O poder da sua classe só é ativado a cada 5 turnos. Ele é totalmente <b>grátis (0 AP)</b> e causa um impacto massivo na batalha!</p>
+                <p><b>🌟 Poder Supremo:</b> A cada 5 turnos, a sua habilidade é carregada! Fica disponível para sempre até ser usada, é <b>grátis (0 AP)</b> e tem um impacto massivo na batalha!</p>
             </div>
         </div>
     </div>
@@ -463,20 +463,22 @@
         const classNames = { 'Espadas': 'Cavaleiro', 'Paus': 'Besta', 'Copas': 'Paladino', 'Ouros': 'Mago' };
         const classMaxHp = { 'Espadas': 40, 'Paus': 50, 'Copas': 30, 'Ouros': 30 };
         
+        // As definições da habilidade Suprema
         const heroPowers = {
-            'Espadas': { name: 'Escudo Divino', cost: 0, desc: '+4 Armadura' },
-            'Paus': { name: 'Faro Cego', cost: 0, desc: 'Compra 2 Cartas' },
-            'Copas': { name: 'Luz Divina', cost: 0, desc: '+4 HP' },
-            'Ouros': { name: 'Arcano Maior', cost: 0, desc: '6 Dano (Perf)' }
+            'Espadas': { name: 'Escudo Divino', desc: '+4 Armadura' },
+            'Paus': { name: 'Faro Cego', desc: 'Compra 2 Cartas' },
+            'Copas': { name: 'Luz Divina', desc: '+4 HP' },
+            'Ouros': { name: 'Arcano Maior', desc: '6 Dano (Perf)' }
         };
 
         let gameMode = 'bot'; let botDifficulty = 0.7; 
         let p1Name = 'Guerreiro'; let p2Name = 'Oponente';
         let currentTurn = 'p1'; let peer = null, conn = null;
 
+        // O SISTEMA DE COOLDOWN: O jogo começa a precisar de 4 turnos (porque no início do jogo, você já está no seu turno 1).
         let gameState = {
-            p1: { hp: 40, maxHp: 40, shield: 0, ap: 3, deck: [], hand: [], discard: [], class: '', powerUsed: false, turns: 1 },
-            p2: { hp: 40, maxHp: 40, shield: 0, ap: 3, deck: [], hand: [], discard: [], class: '', powerUsed: false, turns: 1 },
+            p1: { hp: 40, maxHp: 40, shield: 0, ap: 3, deck: [], hand: [], discard: [], class: '', powerReady: false, powerCooldown: 4 },
+            p2: { hp: 40, maxHp: 40, shield: 0, ap: 3, deck: [], hand: [], discard: [], class: '', powerReady: false, powerCooldown: 4 },
             terrain: null
         };
 
@@ -540,7 +542,12 @@
                 if (data.type === 'PLAY_CARD') executeCardPlay(data.index, 'p2'); 
                 else if (data.type === 'USE_POWER') processHeroPower('p2');
                 else if (data.type === 'END_TURN') {
-                    currentTurn = 'p1'; gameState.p1.turns++; gameState.p1.ap = 3; gameState.p1.powerUsed = false; drawCards('p1', 1); updateUI();
+                    // O turno do p2 acabou, agora é a vez do p1
+                    if (!gameState.p1.powerReady) {
+                        gameState.p1.powerCooldown--;
+                        if (gameState.p1.powerCooldown <= 0) gameState.p1.powerReady = true;
+                    }
+                    currentTurn = 'p1'; gameState.p1.ap = 3; drawCards('p1', 1); updateUI();
                     startTurnTimer();
                 }
                 else if (data.type === 'SYNC_CLASS') {
@@ -581,12 +588,13 @@
             document.getElementById('game-screen').classList.remove('hidden');
             document.getElementById('combat-log').innerHTML = '<div class="text-slate-500 italic">A batalha começou!</div>';
 
+            // Reset completo de status, incluindo o cooldown
             gameState.p1.maxHp = classMaxHp[gameState.p1.class]; gameState.p1.hp = gameState.p1.maxHp;
-            gameState.p1.shield = 0; gameState.p1.ap = 3; gameState.p1.powerUsed = false; gameState.p1.turns = 1;
+            gameState.p1.shield = 0; gameState.p1.ap = 3; gameState.p1.powerReady = false; gameState.p1.powerCooldown = 4;
             
             gameState.p2.class = gameState.p2.class || 'Ouros';
             gameState.p2.maxHp = classMaxHp[gameState.p2.class]; gameState.p2.hp = gameState.p2.maxHp;
-            gameState.p2.shield = 0; gameState.p2.ap = 3; gameState.p2.powerUsed = false; gameState.p2.turns = 1;
+            gameState.p2.shield = 0; gameState.p2.ap = 3; gameState.p2.powerReady = false; gameState.p2.powerCooldown = 4;
 
             gameState.p1.deck = createClassDeck(gameState.p1.class); gameState.p2.deck = createClassDeck(gameState.p2.class);
             gameState.p1.hand = []; gameState.p2.hand = []; gameState.terrain = null; currentTurn = 'p1';
@@ -657,27 +665,24 @@
             updateManaPips(); document.getElementById('p1-deck-count').innerText = gameState.p1.deck.length;
 
             const hpBtn = document.getElementById('hero-power-btn');
+            const state = gameState.p1;
             
-            const isSpecialTurn = (gameState.p1.turns > 0 && gameState.p1.turns % 5 === 0);
-            
-            let turnsLeft = 5 - (gameState.p1.turns % 5);
-            if (isSpecialTurn && gameState.p1.powerUsed) turnsLeft = 5; 
-            if (isSpecialTurn && !gameState.p1.powerUsed) turnsLeft = 0; 
-            
-            // SE É O TURNO 5 E AINDA NÃO USOU
-            if (isSpecialTurn && !gameState.p1.powerUsed && currentTurn === 'p1') {
+            // O sistema de UI da Habilidade agora só obedece à variável "powerReady"
+            if (state.powerReady) {
+                // A habilidade está permanentemente pronta e espera que você a use
                 hpBtn.className = "bg-amber-500 hover:bg-amber-400 border border-amber-300 text-slate-900 text-[10px] md:text-xs font-bold py-1.5 md:py-2 px-2 md:px-4 rounded-lg md:rounded-xl transition shadow flex flex-col items-center animate-pulse";
-                document.getElementById('hero-power-name').innerText = heroPowers[gameState.p1.class].name;
-                // CORREÇÃO: Mostra a descrição real da habilidade em vez de "CLIQUE (GRÁTIS)"
-                document.getElementById('hero-power-cost').innerText = heroPowers[gameState.p1.class].desc;
+                document.getElementById('hero-power-name').innerText = heroPowers[state.class].name;
+                // Exibe exatamente o efeito (ex: +4 Cura) ao invés do aviso
+                document.getElementById('hero-power-cost').innerText = heroPowers[state.class].desc;
+                
                 hpBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                hpBtn.disabled = false;
-            } 
-            // SE AINDA FALTAM TURNOS (OU SE JÁ USOU NESTE)
-            else {
+                // Se for o turno do oponente, o botão bloqueia visualmente para você não clicar fora de hora
+                hpBtn.disabled = (currentTurn !== 'p1');
+            } else {
+                // A habilidade está em contagem decrescente (bloqueada)
                 hpBtn.className = "bg-slate-700 border border-slate-600 text-slate-400 text-[10px] md:text-xs font-bold py-1.5 md:py-2 px-2 md:px-4 rounded-lg md:rounded-xl shadow flex flex-col items-center opacity-50 cursor-not-allowed";
-                document.getElementById('hero-power-name').innerText = heroPowers[gameState.p1.class].name;
-                document.getElementById('hero-power-cost').innerText = `Em ${turnsLeft} Turnos`;
+                document.getElementById('hero-power-name').innerText = heroPowers[state.class].name;
+                document.getElementById('hero-power-cost').innerText = `Em ${state.powerCooldown} Turnos`;
                 hpBtn.classList.add('opacity-50', 'cursor-not-allowed');
                 hpBtn.disabled = true;
             }
@@ -754,13 +759,17 @@
             const entry = document.createElement('div'); entry.innerHTML = msg; log.prepend(entry);
         }
 
+        // --- SISTEMA DE USO DA HABILIDADE ---
         function useHeroPower(who = 'p1') {
             let state = gameState[who];
-            let isSpecialTurn = (state.turns > 0 && state.turns % 5 === 0);
             
-            if (!isSpecialTurn || state.powerUsed || currentTurn !== who) return;
+            // Só executa se o botão estiver pronto e for a sua vez de jogar
+            if (!state.powerReady || currentTurn !== who) return;
             
-            state.powerUsed = true;
+            // Quando usar a habilidade, ela é consumida e o cooldown começa do zero (5 turnos de espera)
+            state.powerReady = false;
+            state.powerCooldown = 5;
+            
             let targetKey = who === 'p1' ? 'p2' : 'p1'; let target = gameState[targetKey];
             let nameLabel = who === 'p1' ? p1Name : p2Name;
             
@@ -878,11 +887,22 @@
             stopTurnTimer(); 
             if (gameMode === 'bot') {
                 if (currentTurn !== 'p1') return;
-                currentTurn = 'p2'; gameState.p2.turns++; gameState.p1.ap = 3; gameState.p1.powerUsed = false; drawCards('p1', 1);
+                
+                // O seu turno acabou. Vamos reduzir o cooldown de tempo de recarga.
+                if (!gameState.p1.powerReady) {
+                    gameState.p1.powerCooldown--;
+                    if (gameState.p1.powerCooldown <= 0) gameState.p1.powerReady = true;
+                }
+
+                currentTurn = 'p2'; gameState.p1.ap = 3; drawCards('p1', 1);
                 document.getElementById('p2-action-text').innerText = "Pensando..."; updateUI();
                 setTimeout(botTurn, 1000);
             } else if (gameMode === 'online') {
-                currentTurn = 'p2'; gameState.p2.turns++; gameState.p1.ap = 3; gameState.p1.powerUsed = false; drawCards('p1', 1);
+                if (!gameState.p1.powerReady) {
+                    gameState.p1.powerCooldown--;
+                    if (gameState.p1.powerCooldown <= 0) gameState.p1.powerReady = true;
+                }
+                currentTurn = 'p2'; gameState.p1.ap = 3; drawCards('p1', 1);
                 if (conn) conn.send({ type: 'END_TURN' }); updateUI();
             }
         }
@@ -890,14 +910,23 @@
         function botTurn() {
             let state = gameState.p2; let attempts = 0;
             
-            let isSpecialTurn = (state.turns > 0 && state.turns % 5 === 0);
-            if (isSpecialTurn && !state.powerUsed) { processHeroPower('p2'); }
+            // O Bot joga a habilidade imediatamente se ela estiver pronta
+            if (state.powerReady) { 
+                processHeroPower('p2'); 
+            }
 
             const interval = setInterval(() => {
                 let playable = state.hand.filter(c => c.cost <= state.ap);
                 if (state.ap <= 0 || playable.length === 0 || attempts >= 4 || Math.random() > botDifficulty) {
                     clearInterval(interval);
-                    currentTurn = 'p1'; gameState.p1.turns++; gameState.p2.ap = 3; gameState.p2.powerUsed = false; drawCards('p2', 1);
+                    
+                    // O turno do Bot acabou. Reduzimos o cooldown dele.
+                    if (!gameState.p2.powerReady) {
+                        gameState.p2.powerCooldown--;
+                        if (gameState.p2.powerCooldown <= 0) gameState.p2.powerReady = true;
+                    }
+
+                    currentTurn = 'p1'; gameState.p2.ap = 3; drawCards('p2', 1);
                     document.getElementById('p2-action-text').innerText = "Aguardando..."; updateUI(); 
                     startTurnTimer(); 
                     return;
