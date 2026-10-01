@@ -138,12 +138,12 @@
                 <p><b>⚡ Pontos de Ação (AP):</b> Tem 3 AP por turno. Cartas normais custam 1 ou 2 AP. Suprema (10) custa 3 AP.</p>
                 <p><b>🛡️ Escudo vs Vida:</b> O Escudo absorve dano antes da Vida. A classe <i>Mago</i> ignora Escudos.</p>
                 <p><b>🌍 Terrenos (A, J, Q, K):</b> Custam 2 AP e mudam as regras para AMBOS até outro terreno ser jogado.</p>
-                <p><b>🌟 Poder da Classe:</b> A cada 5 turnos, o seu Poder Especial transforma-se e o seu efeito é duplicado (2X)!</p>
+                <p><b>🌟 Poder da Classe:</b> A cada 5 turnos, o seu Poder Especial transforma-se, o seu efeito é duplicado (2X) e fica totalmente GRÁTIS (0 AP)!</p>
             </div>
         </div>
     </div>
 
-    <!-- Seleção de Classe (CORRIGIDO: Emojis agora estão padronizados) -->
+    <!-- Seleção de Classe (CORRIGIDO: Cores para Cavaleiro e Besta agora são da mesma cor dos seus naipes) -->
     <div id="class-screen" class="hidden z-10 bg-slate-800/95 p-4 md:p-6 rounded-2xl shadow-2xl text-center max-w-4xl w-[95%] md:w-full border border-slate-700 m-auto mt-10 md:mt-auto relative">
         <button onclick="goBackToMenu()" class="absolute top-4 left-4 bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded-lg font-bold text-slate-300 border border-slate-500 text-xs flex items-center gap-1">⬅️ Voltar</button>
         <h2 id="class-title" class="text-2xl md:text-3xl font-bold mb-4 md:mb-6 mt-6 md:mt-0 text-amber-500">Escolha sua Classe</h2>
@@ -151,12 +151,12 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
             <div onclick="chooseClass('Espadas')" class="bg-slate-900 hover:bg-slate-700/80 p-2 md:p-3 rounded-xl cursor-pointer border border-slate-700 hover:border-amber-500 transition flex flex-col items-center">
                 <img src="cavaleiro.png" onerror="this.src='cavaleiro.jpg'" class="class-card-img mb-2 shadow-md">
-                <span class="font-bold text-sm md:text-base text-slate-200">♠️ Cavaleiro (40 HP)</span>
+                <span class="font-bold text-sm md:text-base text-slate-400">♠️ Cavaleiro (40 HP)</span>
                 <span class="text-[9px] md:text-[10px] text-amber-400 mt-1 uppercase font-bold">Poder: +2 Armadura</span>
             </div>
             <div onclick="chooseClass('Paus')" class="bg-slate-900 hover:bg-slate-700/80 p-2 md:p-3 rounded-xl cursor-pointer border border-slate-700 hover:border-amber-500 transition flex flex-col items-center">
                 <img src="besta.png" onerror="this.src='besta.jpg'" class="class-card-img mb-2 shadow-md">
-                <span class="font-bold text-sm md:text-base text-slate-200">♣️ Besta (50 HP)</span>
+                <span class="font-bold text-sm md:text-base text-slate-400">♣️ Besta (50 HP)</span>
                 <span class="text-[9px] md:text-[10px] text-amber-400 mt-1 uppercase font-bold">Poder: -2 HP = Compra 1</span>
             </div>
             <div onclick="chooseClass('Copas')" class="bg-slate-900 hover:bg-slate-700/80 p-2 md:p-3 rounded-xl cursor-pointer border border-slate-700 hover:border-amber-500 transition flex flex-col items-center">
@@ -202,7 +202,7 @@
                                 <div id="p2-health-fill" class="health-bar-fill bg-green-500" style="width: 100%;"></div>
                             </div>
                             <div class="flex items-center gap-2 md:gap-4 mt-1 text-[10px] md:text-xs font-bold">
-                                <span>❤️ <b id="p2-hp">40</b></span>
+                                <span>❤️️ <b id="p2-hp">40</b></span>
                                 <span class="text-blue-400">🛡 <b id="p2-shield">0</b></span>
                             </div>
                         </div>
@@ -614,7 +614,6 @@
             return deck.sort(() => Math.random() - 0.5);
         }
 
-        /* LÓGICA DE CARTAS: NERF DO PALADINO (COPAS) APLICADO */
         function getCardSkill(card) {
             let name = "Hab."; let desc = ""; let dmg = 0; let heal = 0; let shield = 0; let selfDmg = 0; let pierce = false;
             let v = card.value;
@@ -656,7 +655,6 @@
             }
         }
 
-        // CORREÇÃO DO NOME: FORÇAR ATUALIZAÇÃO NO UPDATE_UI
         function updateUI() {
             document.getElementById('p1-name').textContent = p1Name;
             document.getElementById('p2-name').textContent = p2Name;
@@ -666,20 +664,27 @@
             updateManaPips(); document.getElementById('p1-deck-count').innerText = gameState.p1.deck.length;
 
             const hpBtn = document.getElementById('hero-power-btn');
-            const isSpecial = (gameState.p1.turns % 5 === 0);
+            
+            // VERIFICAÇÃO DO PODER ESPECIAL (Turno 5, 10, 15...)
+            const isSpecial = (gameState.p1.turns > 0 && gameState.p1.turns % 5 === 0);
+            let powerCost = isSpecial ? 0 : 2; // Custo GRÁTIS se for especial
             
             if (isSpecial) {
                 hpBtn.className = "bg-amber-500 hover:bg-amber-400 border border-amber-300 text-slate-900 text-[10px] md:text-xs font-bold py-1.5 md:py-2 px-2 md:px-4 rounded-lg md:rounded-xl transition shadow flex flex-col items-center animate-pulse";
                 document.getElementById('hero-power-name').innerText = heroPowers[gameState.p1.class].name + " 2X!";
-                document.getElementById('hero-power-cost').innerText = "ESPECIAL!";
+                document.getElementById('hero-power-cost').innerText = "GRÁTIS!";
             } else {
                 hpBtn.className = "bg-indigo-700 hover:bg-indigo-600 border border-indigo-400 text-white text-[10px] md:text-xs font-bold py-1.5 md:py-2 px-2 md:px-4 rounded-lg md:rounded-xl transition shadow flex flex-col items-center";
                 document.getElementById('hero-power-name').innerText = heroPowers[gameState.p1.class].name;
                 document.getElementById('hero-power-cost').innerText = "2 AP";
             }
 
-            if (gameState.p1.ap >= 2 && !gameState.p1.powerUsed && currentTurn === 'p1') hpBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-            else hpBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            // Habilita o botão se tiver AP suficiente (ou se for grátis) e não tiver sido usado
+            if (gameState.p1.ap >= powerCost && !gameState.p1.powerUsed && currentTurn === 'p1') {
+                hpBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                hpBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            }
 
             document.getElementById('p2-hp').innerText = gameState.p2.hp; document.getElementById('p2-shield').innerText = gameState.p2.shield; 
             updateHealthBar(gameState.p2.hp, gameState.p2.maxHp, 'p2-health-fill');
@@ -753,16 +758,21 @@
             const entry = document.createElement('div'); entry.innerHTML = msg; log.prepend(entry);
         }
 
+        // --- LÓGICA DO PODER REFEITA COM CUSTO GRÁTIS NO TURNO 5 ---
         function useHeroPower(who = 'p1') {
             let state = gameState[who];
-            if (state.ap < 2 || state.powerUsed || currentTurn !== who) return;
-            state.ap -= 2; state.powerUsed = true;
+            let isSpecial = (state.turns > 0 && state.turns % 5 === 0);
+            let cost = isSpecial ? 0 : 2; // Custo dinâmico
+            
+            // Verifica se tem AP suficiente para o custo e se já não foi usado
+            if (state.ap < cost || state.powerUsed || currentTurn !== who) return;
+            
+            state.ap -= cost; 
+            state.powerUsed = true;
             let targetKey = who === 'p1' ? 'p2' : 'p1'; let target = gameState[targetKey];
             let nameLabel = who === 'p1' ? p1Name : p2Name;
             
-            let isSpecial = (state.turns % 5 === 0);
-            
-            logAction(`⚡ <b>${nameLabel}</b> usou ${isSpecial ? 'Poder ESPECIAL!' : 'Poder!'}`);
+            logAction(`⚡ <b>${nameLabel}</b> usou ${isSpecial ? 'Poder ESPECIAL (Grátis)!' : 'Poder!'}`);
             playSfx('power');
 
             if (state.class === 'Espadas') { 
@@ -895,7 +905,14 @@
 
         function botTurn() {
             let state = gameState.p2; let attempts = 0;
-            if (state.ap >= 2 && Math.random() < botDifficulty && !state.powerUsed) { processHeroPower('p2'); }
+            
+            // Bot também ganha o poder especial grátis!
+            let isSpecial = (state.turns > 0 && state.turns % 5 === 0);
+            let powerCost = isSpecial ? 0 : 2;
+            
+            if (state.ap >= powerCost && Math.random() < botDifficulty && !state.powerUsed) { 
+                processHeroPower('p2'); 
+            }
 
             const interval = setInterval(() => {
                 let playable = state.hand.filter(c => c.cost <= state.ap);
