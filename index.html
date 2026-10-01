@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -48,11 +48,12 @@
         .suit-joker { color: #c084fc; }
         .class-card-img { width: 100%; height: 160px; object-fit: cover; object-position: top center; border-radius: 8px; }
         
+        /* CORREÇÃO DO TELEMÓVEL AQUI */
         @media (max-width: 768px) {
             #p1-hand { overflow-x: visible; justify-content: center; }
-            #p1-hand .card { margin-left: -35px; transform: scale(0.9); }
+            #p1-hand .card { margin-left: -35px; transform: scale(0.95); transform-origin: bottom; }
             #p1-hand .card:first-child { margin-left: 0; }
-            #p1-hand .card:hover:not(.disabled) { margin-right: 15px; margin-left: -20px; transform: scale(1) translateY(-15px); }
+            #p1-hand .card:hover:not(.disabled) { margin-right: 15px; margin-left: -20px; transform: scale(1) translateY(-10px); }
             .class-card-img { height: 100px; }
         }
 
@@ -62,30 +63,28 @@
         
         .card-throw { position: fixed; z-index: 100; transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); pointer-events: none; }
 
-        /* Proteção Visual Básica */
         ::selection { background: transparent; }
     </style>
 </head>
 <body id="main-body" class="h-screen flex flex-col relative select-none">
 
-    <!-- Bloqueio Anti-Cópia Simples -->
+    <!-- Bloqueio Anti-Cópia -->
     <script>
-        document.addEventListener('contextmenu', event => event.preventDefault()); // Bloqueia botão direito
+        document.addEventListener('contextmenu', event => event.preventDefault()); 
         document.addEventListener('keydown', event => {
             if (event.ctrlKey && (event.key === 'u' || event.key === 's' || event.key === 'c' || event.key === 'p')) {
-                event.preventDefault(); // Bloqueia atalhos de ver código e salvar
+                event.preventDefault(); 
             }
         });
     </script>
 
     <div id="vfx-layer" class="fixed inset-0 z-[55] pointer-events-none overflow-hidden hidden"></div>
 
-    <!-- Timer do Jogo -->
     <div id="timer-display" class="fixed top-14 left-1/2 transform -translate-x-1/2 bg-slate-900 border border-amber-500 px-4 py-1.5 rounded-full text-amber-500 font-bold z-[60] shadow-xl hidden flex items-center gap-2">
         <span>⏱️</span> <span id="time-left">15</span>s
     </div>
 
-    <!-- Tela Inicial -->
+    <!-- Ecrã Inicial -->
     <div id="menu-screen" class="z-10 bg-slate-800/95 p-6 md:p-8 rounded-2xl shadow-2xl text-center max-w-md w-[95%] md:w-full border border-slate-700 m-auto mt-10 md:mt-auto relative">
         <button onclick="showTutorial()" class="absolute top-4 right-4 bg-slate-700 hover:bg-slate-600 w-8 h-8 rounded-full font-bold text-amber-400 border border-slate-500">?</button>
         
@@ -111,7 +110,7 @@
         </div>
     </div>
 
-    <!-- Tela Modal: Online -->
+    <!-- Modais -->
     <div id="online-modal" class="hidden fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-4">
         <div class="bg-slate-800 border border-slate-700 p-6 rounded-2xl max-w-md w-full text-center">
             <h2 class="text-2xl font-bold mb-4 text-amber-500">Jogar Online com Amigo</h2>
@@ -125,7 +124,7 @@
             </div>
             <hr class="border-slate-700 my-4">
             <div class="text-left mb-4">
-                <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Entrar em uma Sala</label>
+                <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Entrar numa Sala</label>
                 <input type="text" id="join-code-input" placeholder="Cole o Código aqui" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white font-bold focus:outline-none focus:border-amber-500 mb-2 uppercase text-center tracking-widest">
                 <button onclick="joinOnlineRoom()" class="w-full bg-blue-600 hover:bg-blue-500 py-2.5 rounded-lg font-bold text-white">Entrar na Sala</button>
             </div>
@@ -133,22 +132,20 @@
         </div>
     </div>
 
-    <!-- Tela Modal: Tutorial -->
     <div id="tutorial-modal" class="hidden fixed inset-0 bg-black/85 z-[70] flex items-center justify-center p-4">
         <div class="bg-slate-800 border border-slate-700 p-6 rounded-2xl max-w-md w-full text-left shadow-2xl relative">
             <button onclick="closeTutorial()" class="absolute top-4 right-4 bg-rose-600 hover:bg-rose-500 w-8 h-8 rounded-full font-bold text-white">X</button>
             <h2 class="text-2xl font-bold mb-4 text-amber-500 border-b border-slate-600 pb-2">📖 Como Jogar</h2>
             <div class="text-sm text-slate-300 space-y-3 h-64 overflow-y-auto pr-2">
-                <p><b>⚡ Pontos de Ação (AP):</b> Você tem 3 AP por turno. Cartas numéricas custam 1 ou 2 AP. Suprema (10) custa 3 AP.</p>
+                <p><b>⚡ Pontos de Ação (AP):</b> Tem 3 AP por turno. Cartas normais custam 1 ou 2 AP. Suprema (10) custa 3 AP.</p>
                 <p><b>🛡️ Escudo vs Vida:</b> O Escudo absorve dano antes da Vida. A classe <i>Mago</i> ignora Escudos.</p>
-                <p><b>🌍 Terrenos (A, J, Q, K):</b> Custam 2 AP e mudam as regras para AMBOS os jogadores até outro terreno ser jogado.</p>
-                <p><b>🃏 Coringa (Joker):</b> Custa 3 AP e causa 8 de Dano Direto ignorando escudos.</p>
-                <p><b>🌟 Poder da Classe:</b> Custa 2 AP. Use estrategicamente quando sobrar mana!</p>
+                <p><b>🌍 Terrenos (A, J, Q, K):</b> Custam 2 AP e mudam as regras para AMBOS até outro terreno ser jogado.</p>
+                <p><b>🌟 Poder da Classe:</b> A cada 5 turnos, o seu Poder Especial transforma-se e o seu efeito é duplicado (2X)!</p>
             </div>
         </div>
     </div>
 
-    <!-- Tela 2: Seleção de Classe -->
+    <!-- Seleção de Classe -->
     <div id="class-screen" class="hidden z-10 bg-slate-800/95 p-4 md:p-6 rounded-2xl shadow-2xl text-center max-w-4xl w-[95%] md:w-full border border-slate-700 m-auto mt-10 md:mt-auto relative">
         <button onclick="goBackToMenu()" class="absolute top-4 left-4 bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded-lg font-bold text-slate-300 border border-slate-500 text-xs flex items-center gap-1">⬅️ Voltar</button>
         <h2 id="class-title" class="text-2xl md:text-3xl font-bold mb-4 md:mb-6 mt-6 md:mt-0 text-amber-500">Escolha sua Classe</h2>
@@ -161,8 +158,8 @@
             </div>
             <div onclick="chooseClass('Paus')" class="bg-slate-900 hover:bg-slate-700/80 p-2 md:p-3 rounded-xl cursor-pointer border border-slate-700 hover:border-amber-500 transition flex flex-col items-center">
                 <img src="besta.png" onerror="this.src='besta.jpg'" class="class-card-img mb-2 shadow-md">
-                <span class="font-bold text-sm md:text-base text-slate-200">♣️️ Besta (50 HP)</span>
-                <span class="text-[9px] md:text-[10px] text-amber-400 mt-1 uppercase font-bold">Poder: -2 HP = 1 Carta</span>
+                <span class="font-bold text-sm md:text-base text-slate-200">♣ Besta (50 HP)</span>
+                <span class="text-[9px] md:text-[10px] text-amber-400 mt-1 uppercase font-bold">Poder: -2 HP = Compra 1</span>
             </div>
             <div onclick="chooseClass('Copas')" class="bg-slate-900 hover:bg-slate-700/80 p-2 md:p-3 rounded-xl cursor-pointer border border-slate-700 hover:border-amber-500 transition flex flex-col items-center">
                 <img src="paladino.png" onerror="this.src='paladino.jpg'" class="class-card-img mb-2 shadow-md">
@@ -171,15 +168,14 @@
             </div>
             <div onclick="chooseClass('Ouros')" class="bg-slate-900 hover:bg-slate-700/80 p-2 md:p-3 rounded-xl cursor-pointer border border-slate-700 hover:border-amber-500 transition flex flex-col items-center">
                 <img src="mago.png" onerror="this.src='mago.jpg'" class="class-card-img mb-2 shadow-md">
-                <span class="font-bold text-sm md:text-base text-red-400">♦️ Mago (30 HP)</span>
+                <span class="font-bold text-sm md:text-base text-red-400">♦️️ Mago (30 HP)</span>
                 <span class="text-[9px] md:text-[10px] text-amber-400 mt-1 uppercase font-bold">Poder: 3 Dano (Perf)</span>
             </div>
         </div>
     </div>
 
-    <!-- Tela 3: Campo de Batalha -->
+    <!-- Campo de Batalha -->
     <div id="game-screen" class="hidden w-full h-full flex flex-col justify-between">
-        <!-- Topo -->
         <div>
             <div class="bg-slate-950 px-2 md:px-4 py-1.5 flex justify-between items-center border-b border-slate-800 text-xs relative z-20">
                 <div class="flex items-center gap-3">
@@ -187,10 +183,10 @@
                     <span id="session-score" class="bg-slate-800 px-2 py-0.5 rounded text-amber-400 font-bold tracking-widest hidden">P1 0 x 0 P2</span>
                 </div>
                 <div class="flex gap-2">
-                    <button onclick="toggleAudio()" id="bgm-toggle" class="bg-slate-800 hover:bg-slate-700 px-2 py-1 rounded transition text-base" title="Ligar/Desligar Música">🔇</button>
-                    <button onclick="showTutorial()" class="bg-slate-800 hover:bg-slate-700 px-2 py-1 rounded font-bold text-amber-400 transition" title="Regras">?</button>
-                    <button onclick="requestRestart()" class="bg-slate-800 hover:bg-slate-700 px-2 py-1 rounded font-bold transition" title="Recomeçar">🔄</button>
-                    <button onclick="requestAbandon()" class="bg-rose-900 hover:bg-rose-800 px-2 py-1 rounded font-bold transition text-white" title="Abandonar">🏳️</button>
+                    <button onclick="toggleAudio()" id="bgm-toggle" class="bg-slate-800 hover:bg-slate-700 px-2 py-1 rounded transition text-base">🔇</button>
+                    <button onclick="showTutorial()" class="bg-slate-800 hover:bg-slate-700 px-2 py-1 rounded font-bold text-amber-400 transition">?</button>
+                    <button onclick="requestRestart()" class="bg-slate-800 hover:bg-slate-700 px-2 py-1 rounded font-bold transition">🔄</button>
+                    <button onclick="requestAbandon()" class="bg-rose-900 hover:bg-rose-800 px-2 py-1 rounded font-bold transition text-white">🏳️</button>
                 </div>
             </div>
 
@@ -209,7 +205,7 @@
                             </div>
                             <div class="flex items-center gap-2 md:gap-4 mt-1 text-[10px] md:text-xs font-bold">
                                 <span>❤️ <b id="p2-hp">40</b></span>
-                                <span class="text-blue-400">🛡️️ <b id="p2-shield">0</b></span>
+                                <span class="text-blue-400">🛡 <b id="p2-shield">0</b></span>
                             </div>
                         </div>
                     </div>
@@ -221,7 +217,6 @@
             </div>
         </div>
 
-        <!-- Centro: Terreno + Histórico -->
         <div class="flex-1 flex flex-row items-center justify-around px-2 md:px-8 relative overflow-hidden z-10">
             <div id="terrain-zone" class="w-24 h-32 md:w-32 md:h-44 border-2 border-dashed border-slate-700 rounded-xl flex items-center justify-center text-slate-500 text-center p-1 md:p-2 flex-col bg-slate-900/40 relative">
                 <span class="text-[10px] md:text-xs font-bold opacity-70">TERRENO</span>
@@ -236,7 +231,6 @@
             </div>
         </div>
 
-        <!-- Baixo: Jogador -->
         <div class="bg-slate-900/90 border-t border-slate-800 p-2 md:p-3 pt-3 md:pt-4 relative z-20">
             <div class="flex justify-between items-end mb-2 md:mb-3 px-2 md:px-4 relative" id="p1-target">
                 
@@ -244,6 +238,7 @@
                     <img id="p1-avatar" class="w-14 h-14 md:w-16 md:h-16 rounded-full border-2 border-emerald-500 object-cover object-top shadow-lg">
                     <div class="w-32 md:w-48">
                         <div class="flex items-baseline gap-1 md:gap-2">
+                            <!-- NOME CORRIGIDO AQUI -->
                             <h2 id="p1-name" class="text-sm md:text-xl font-bold text-emerald-400 drop-shadow-md truncate max-w-[80px] md:max-w-[150px]">Você</h2>
                             <span id="p1-class-name" class="text-[10px] md:text-xs text-slate-400 uppercase hidden md:inline">Classe</span>
                         </div>
@@ -267,18 +262,18 @@
                 <div class="text-center flex gap-2 md:flex-col items-center">
                     <button id="hero-power-btn" onclick="useHeroPower()" class="bg-indigo-700 hover:bg-indigo-600 border border-indigo-400 text-white text-[10px] md:text-xs font-bold py-1.5 md:py-2 px-2 md:px-4 rounded-lg md:rounded-xl transition shadow flex flex-col items-center">
                         <span id="hero-power-name" class="uppercase">Poder</span>
-                        <span class="text-[8px] md:text-[10px] text-indigo-200 mt-0.5">2 AP</span>
+                        <span id="hero-power-cost" class="text-[8px] md:text-[10px] mt-0.5 opacity-80">2 AP</span>
                     </button>
-                    <!-- Passar Turno Mobile -->
                     <button onclick="endTurn()" class="md:hidden bg-amber-600 text-white font-bold py-1.5 px-3 rounded-lg border border-amber-400 text-[10px]">Passar</button>
                     <div class="text-[10px] md:text-xs text-slate-500 font-bold mt-1 hidden md:block">Baralho: <b id="p1-deck-count" class="text-white">0</b></div>
                 </div>
             </div>
-            <div id="p1-hand" class="flex md:justify-center h-40 md:h-44 px-2 md:px-4 pb-1 md:pb-2 w-full"></div>
+            <!-- ÁREA DAS CARTAS CORRIGIDA (Mais altura no mobile para não cortar) -->
+            <div id="p1-hand" class="flex md:justify-center h-48 md:h-44 px-2 md:px-4 pb-4 md:pb-2 w-full"></div>
         </div>
     </div>
 
-    <!-- Modais de Confirmação e Espera -->
+    <!-- Modais Extra -->
     <div id="confirm-modal" class="hidden fixed inset-0 bg-black/85 z-[60] flex items-center justify-center p-4">
         <div class="bg-slate-800 border border-slate-700 p-8 rounded-2xl max-w-sm w-full text-center shadow-2xl">
             <h2 id="confirm-title" class="text-2xl font-extrabold mb-2 text-amber-500">Tem certeza?</h2>
@@ -294,8 +289,6 @@
             <p id="wait-desc" class="text-amber-400 font-bold text-lg animate-pulse">Aguardando oponente...</p>
         </div>
     </div>
-
-    <!-- Modal Fim de Jogo -->
     <div id="end-modal" class="hidden fixed inset-0 bg-black/70 z-[60] flex items-center justify-center p-4 transition-opacity">
         <div class="bg-slate-800/90 border border-slate-700 p-8 rounded-2xl max-w-sm w-full text-center shadow-2xl backdrop-blur-sm">
             <h2 id="modal-title" class="text-4xl font-extrabold mb-2 text-amber-500 drop-shadow-lg">VITÓRIA!</h2>
@@ -305,7 +298,6 @@
     </div>
 
     <script>
-        // --- GERENCIAMENTO DE PLACAR ---
         let localWins = parseInt(localStorage.getItem('cc_wins')) || 0;
         let localLosses = parseInt(localStorage.getItem('cc_losses')) || 0;
         let sessionP1Wins = 0; let sessionP2Wins = 0;
@@ -329,7 +321,6 @@
             el.innerText = `Você ${sessionP1Wins} x ${sessionP2Wins} Oponente`;
         }
 
-        // --- AUDIO ---
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         let bgmInterval = null; let isAudioOn = false;
         const scale = [220.00, 261.63, 329.63, 392.00, 440.00, 329.63, 261.63]; let noteIndex = 0;
@@ -396,37 +387,22 @@
             } catch(e){}
         }
 
-        // --- TIMER DO JOGO ---
-        let turnTimerInterval = null;
-        let timeLeft = 15;
+        let turnTimerInterval = null; let timeLeft = 15;
 
         function startTurnTimer() {
-            clearInterval(turnTimerInterval);
-            timeLeft = 15;
+            clearInterval(turnTimerInterval); timeLeft = 15;
             document.getElementById('time-left').innerText = timeLeft;
-            
-            // Só exibe e roda o timer se for a vez de um jogador humano ativo
             if ((gameMode === 'bot' && currentTurn === 'p1') || gameMode === 'online') {
                 document.getElementById('timer-display').classList.remove('hidden');
                 turnTimerInterval = setInterval(() => {
-                    timeLeft--;
-                    document.getElementById('time-left').innerText = timeLeft;
-                    if (timeLeft <= 0) {
-                        clearInterval(turnTimerInterval);
-                        endTurn(); // Passa o turno automaticamente
-                    }
+                    timeLeft--; document.getElementById('time-left').innerText = timeLeft;
+                    if (timeLeft <= 0) { clearInterval(turnTimerInterval); endTurn(); }
                 }, 1000);
-            } else {
-                document.getElementById('timer-display').classList.add('hidden');
-            }
+            } else { document.getElementById('timer-display').classList.add('hidden'); }
         }
 
-        function stopTurnTimer() {
-            clearInterval(turnTimerInterval);
-            document.getElementById('timer-display').classList.add('hidden');
-        }
+        function stopTurnTimer() { clearInterval(turnTimerInterval); document.getElementById('timer-display').classList.add('hidden'); }
 
-        // --- MODAIS ---
         function showTutorial() { document.getElementById('tutorial-modal').classList.remove('hidden'); }
         function closeTutorial() { document.getElementById('tutorial-modal').classList.add('hidden'); }
         function showConfirm(title, desc, onConfirm) {
@@ -479,28 +455,21 @@
             } else if (title === 'DERROTA!') {
                 document.getElementById('modal-title').className = 'text-3xl md:text-5xl font-extrabold mb-2 text-red-600 drop-shadow-lg';
                 triggerDefeatFX(); saveScore(false); playSfx('damage');
-            } else {
-                document.getElementById('modal-title').className = 'text-3xl md:text-5xl font-extrabold mb-2 text-amber-500 drop-shadow-lg';
-            }
+            } else { document.getElementById('modal-title').className = 'text-3xl md:text-5xl font-extrabold mb-2 text-amber-500 drop-shadow-lg'; }
             document.getElementById('end-modal').classList.remove('hidden');
         }
 
         function returnToMenu() {
-            document.getElementById('end-modal').classList.add('hidden');
-            document.getElementById('game-screen').classList.add('hidden');
-            document.getElementById('class-screen').classList.add('hidden');
-            document.getElementById('menu-screen').classList.remove('hidden');
+            document.getElementById('end-modal').classList.add('hidden'); document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('class-screen').classList.add('hidden'); document.getElementById('menu-screen').classList.remove('hidden');
             clearFX(); stopTurnTimer(); if(conn) { conn.close(); peer.destroy(); }
         }
 
-        // NOVO: Função para Voltar da Tela de Classe para o Menu
         function goBackToMenu() {
-            document.getElementById('class-screen').classList.add('hidden');
-            document.getElementById('menu-screen').classList.remove('hidden');
-            if(conn) { conn.close(); peer.destroy(); } // Cancela a conexão online se estiver voltando
+            document.getElementById('class-screen').classList.add('hidden'); document.getElementById('menu-screen').classList.remove('hidden');
+            if(conn) { conn.close(); peer.destroy(); } 
         }
 
-        // --- DADOS REBALANCEADOS ---
         const classImages = { 'Espadas': 'cavaleiro.png', 'Paus': 'besta.png', 'Copas': 'paladino.png', 'Ouros': 'mago.png' };
         const classNames = { 'Espadas': 'Cavaleiro', 'Paus': 'Besta', 'Copas': 'Paladino', 'Ouros': 'Mago' };
         const classMaxHp = { 'Espadas': 40, 'Paus': 50, 'Copas': 30, 'Ouros': 30 };
@@ -512,13 +481,14 @@
             'Ouros': { name: 'Arcano', cost: 2, desc: '3 Dano (Perf)' }
         };
 
-        let gameMode = 'bot'; let botDifficulty = 0.7; // Reduzido
+        let gameMode = 'bot'; let botDifficulty = 0.7; 
         let p1Name = 'Guerreiro'; let p2Name = 'Oponente';
         let currentTurn = 'p1'; let peer = null, conn = null;
 
+        // ADICIONADO CONTADOR DE TURNOS "turns: 1"
         let gameState = {
-            p1: { hp: 40, maxHp: 40, shield: 0, ap: 3, deck: [], hand: [], discard: [], class: '', powerUsed: false },
-            p2: { hp: 40, maxHp: 40, shield: 0, ap: 3, deck: [], hand: [], discard: [], class: '', powerUsed: false },
+            p1: { hp: 40, maxHp: 40, shield: 0, ap: 3, deck: [], hand: [], discard: [], class: '', powerUsed: false, turns: 1 },
+            p2: { hp: 40, maxHp: 40, shield: 0, ap: 3, deck: [], hand: [], discard: [], class: '', powerUsed: false, turns: 1 },
             terrain: null
         };
 
@@ -552,8 +522,7 @@
         function selectMode(mode, difficulty) {
             gameMode = mode; botDifficulty = difficulty;
             p1Name = document.getElementById('player-nickname').value.trim() || 'Guerreiro';
-            document.getElementById('menu-screen').classList.add('hidden');
-            document.getElementById('class-screen').classList.remove('hidden');
+            document.getElementById('menu-screen').classList.add('hidden'); document.getElementById('class-screen').classList.remove('hidden');
             document.getElementById('class-title').innerText = `${p1Name}: Escolha sua Classe`;
             if(!isAudioOn) toggleAudio();
         }
@@ -583,8 +552,8 @@
                 if (data.type === 'PLAY_CARD') executeCardPlay(data.index, 'p2'); 
                 else if (data.type === 'USE_POWER') processHeroPower('p2');
                 else if (data.type === 'END_TURN') {
-                    currentTurn = 'p1'; gameState.p1.ap = 3; gameState.p1.powerUsed = false; drawCards('p1', 1); updateUI();
-                    startTurnTimer(); // Reinicia timer para o jogador 1
+                    currentTurn = 'p1'; gameState.p1.turns++; gameState.p1.ap = 3; gameState.p1.powerUsed = false; drawCards('p1', 1); updateUI();
+                    startTurnTimer();
                 }
                 else if (data.type === 'SYNC_CLASS') {
                     gameState.p2.class = data.class; p2Name = "Oponente";
@@ -624,27 +593,27 @@
             document.getElementById('game-screen').classList.remove('hidden');
             document.getElementById('combat-log').innerHTML = '<div class="text-slate-500 italic">A batalha começou!</div>';
 
-            // Configura HP com base no rebalanceamento
+            // CORREÇÃO DOS NOMES AQUI (agora usa o p1Name introduzido)
+            document.getElementById('p1-name').innerText = p1Name;
+            document.getElementById('p2-name').innerText = p2Name;
+
             gameState.p1.maxHp = classMaxHp[gameState.p1.class]; gameState.p1.hp = gameState.p1.maxHp;
-            gameState.p1.shield = 0; gameState.p1.ap = 3; gameState.p1.powerUsed = false;
+            gameState.p1.shield = 0; gameState.p1.ap = 3; gameState.p1.powerUsed = false; gameState.p1.turns = 1;
             
             gameState.p2.class = gameState.p2.class || 'Ouros';
             gameState.p2.maxHp = classMaxHp[gameState.p2.class]; gameState.p2.hp = gameState.p2.maxHp;
-            gameState.p2.shield = 0; gameState.p2.ap = 3; gameState.p2.powerUsed = false;
+            gameState.p2.shield = 0; gameState.p2.ap = 3; gameState.p2.powerUsed = false; gameState.p2.turns = 1;
 
-            gameState.p1.deck = createClassDeck(gameState.p1.class);
-            gameState.p2.deck = createClassDeck(gameState.p2.class);
-            gameState.p1.hand = []; gameState.p2.hand = [];
-            gameState.terrain = null; currentTurn = 'p1';
+            gameState.p1.deck = createClassDeck(gameState.p1.class); gameState.p2.deck = createClassDeck(gameState.p2.class);
+            gameState.p1.hand = []; gameState.p2.hand = []; gameState.terrain = null; currentTurn = 'p1';
 
             document.getElementById('p1-avatar').src = classImages[gameState.p1.class];
             document.getElementById('p2-avatar').src = classImages[gameState.p2.class];
             document.getElementById('p1-class-name').innerText = classNames[gameState.p1.class];
             document.getElementById('p2-class-name').innerText = classNames[gameState.p2.class];
-            document.getElementById('hero-power-name').innerText = heroPowers[gameState.p1.class].name;
 
             drawCards('p1', 5); drawCards('p2', 5);
-            updateSessionScore(); updateUI(); startTurnTimer(); // Inicia o tempo!
+            updateSessionScore(); updateUI(); startTurnTimer(); 
         }
 
         function createClassDeck(suit) {
@@ -654,7 +623,6 @@
             return deck.sort(() => Math.random() - 0.5);
         }
 
-        // --- CARTAS REBALANCEADAS ---
         function getCardSkill(card) {
             let name = "Hab."; let desc = ""; let dmg = 0; let heal = 0; let shield = 0; let selfDmg = 0; let pierce = false;
             let v = card.value;
@@ -667,19 +635,19 @@
             }
             if(card.isJoker) return {name: 'Caos', desc: '8 Dano Perf.', dmg: 8, pierce: true};
 
-            if(card.suit === 'Espadas') { // Menos Escudo
+            if(card.suit === 'Espadas') {
                 if(v<='5') { name="Defesa"; dmg=2; shield=1; } else if(v<='9') { name="Avanço"; dmg=4; shield=2; } else { name="Golpe"; dmg=6; shield=3; }
                 desc = `Dmg:${dmg} | Shd:+${shield}`;
             } 
-            else if(card.suit === 'Paus') { // Menos Recuo
+            else if(card.suit === 'Paus') {
                 if(v<='5') { name="Arranhão"; dmg=3; selfDmg=0; } else if(v<='9') { name="Mordida"; dmg=6; selfDmg=1; } else { name="Fúria"; dmg=10; selfDmg=2; }
                 desc = `Dmg:${dmg} (Recuo:${selfDmg})`;
             }
-            else if(card.suit === 'Copas') { // Menos Cura
+            else if(card.suit === 'Copas') {
                 if(v<='5') { name="Toque"; dmg=1; heal=1; } else if(v<='9') { name="Veredito"; dmg=3; heal=2; } else { name="Milagre"; dmg=5; heal=3; } 
                 desc = `Dmg:${dmg} | Cur:+${heal}`;
             }
-            else if(card.suit === 'Ouros') { // Mais Dano
+            else if(card.suit === 'Ouros') {
                 pierce = true;
                 if(v<='5') { name="Faísca"; dmg=3; } else if(v<='9') { name="Choque"; dmg=5; } else { name="Desintegração"; dmg=9; } 
                 desc = `Dano Perf: ${dmg}`;
@@ -701,7 +669,20 @@
             updateHealthBar(gameState.p1.hp, gameState.p1.maxHp, 'p1-health-fill');
             updateManaPips(); document.getElementById('p1-deck-count').innerText = gameState.p1.deck.length;
 
+            // LÓGICA DA NOVA HABILIDADE ESPECIAL 2X (A cada 5 turnos)
             const hpBtn = document.getElementById('hero-power-btn');
+            const isSpecial = (gameState.p1.turns % 5 === 0);
+            
+            if (isSpecial) {
+                hpBtn.className = "bg-amber-500 hover:bg-amber-400 border border-amber-300 text-slate-900 text-[10px] md:text-xs font-bold py-1.5 md:py-2 px-2 md:px-4 rounded-lg md:rounded-xl transition shadow flex flex-col items-center animate-pulse";
+                document.getElementById('hero-power-name').innerText = heroPowers[gameState.p1.class].name + " 2X!";
+                document.getElementById('hero-power-cost').innerText = "ESPECIAL!";
+            } else {
+                hpBtn.className = "bg-indigo-700 hover:bg-indigo-600 border border-indigo-400 text-white text-[10px] md:text-xs font-bold py-1.5 md:py-2 px-2 md:px-4 rounded-lg md:rounded-xl transition shadow flex flex-col items-center";
+                document.getElementById('hero-power-name').innerText = heroPowers[gameState.p1.class].name;
+                document.getElementById('hero-power-cost').innerText = "2 AP";
+            }
+
             if (gameState.p1.ap >= 2 && !gameState.p1.powerUsed && currentTurn === 'p1') hpBtn.classList.remove('opacity-50', 'cursor-not-allowed');
             else hpBtn.classList.add('opacity-50', 'cursor-not-allowed');
 
@@ -777,7 +758,7 @@
             const entry = document.createElement('div'); entry.innerHTML = msg; log.prepend(entry);
         }
 
-        // --- PODERES REBALANCEADOS ---
+        // --- PODERES COM EFEITO ULTIMATE (2X) ---
         function useHeroPower(who = 'p1') {
             let state = gameState[who];
             if (state.ap < 2 || state.powerUsed || currentTurn !== who) return;
@@ -785,23 +766,36 @@
             let targetKey = who === 'p1' ? 'p2' : 'p1'; let target = gameState[targetKey];
             let nameLabel = who === 'p1' ? p1Name : p2Name;
             
-            logAction(`⚡ <b>${nameLabel}</b> usou Poder!`);
+            let isSpecial = (state.turns % 5 === 0);
+            
+            logAction(`⚡ <b>${nameLabel}</b> usou ${isSpecial ? 'Poder ESPECIAL!' : 'Poder!'}`);
             playSfx('power');
 
             if (state.class === 'Espadas') { 
-                let s = 2; if(gameState.terrain?.value==='A') s+=2; state.shield += s; // Nerfado
+                let s = 2; if(gameState.terrain?.value==='A') s+=2; 
+                if(isSpecial) s *= 2; // Dobra o ganho
+                state.shield += s;
                 createFloatingText(`${who}-target`, `🛡️ +${s}`, 'text-blue-400'); playSfx('shield');
             } 
             else if (state.class === 'Paus') { 
-                state.hp -= 2; drawCards(who, 1); 
-                createFloatingText(`${who}-target`, '🩸 -2', 'text-red-500'); playSfx('damage');
+                if(isSpecial) {
+                    drawCards(who, 2); // Duas cartas, sem perder vida
+                    createFloatingText(`${who}-target`, '🃏 +2 Cartas', 'text-amber-400');
+                } else {
+                    state.hp -= 2; drawCards(who, 1); 
+                    createFloatingText(`${who}-target`, '🩸 -2', 'text-red-500'); playSfx('damage');
+                }
             } 
             else if (state.class === 'Copas') { 
-                let h = 2; if(gameState.terrain?.value==='A') h+=2; state.hp = Math.min(state.maxHp, state.hp + h); // Nerfado
+                let h = 2; if(gameState.terrain?.value==='A') h+=2; 
+                if(isSpecial) h *= 2; // Dobra a cura
+                state.hp = Math.min(state.maxHp, state.hp + h); 
                 createFloatingText(`${who}-target`, `💚 +${h}`, 'text-green-400'); playSfx('heal');
             } 
             else if (state.class === 'Ouros') { 
-                let d = 3; if(gameState.terrain?.value==='K') d+=2; if(gameState.terrain?.value==='Q') d=Math.max(0, d-1); target.hp -= d; // Buffado
+                let d = 3; if(gameState.terrain?.value==='K') d+=2; if(gameState.terrain?.value==='Q') d=Math.max(0, d-1); 
+                if(isSpecial) d *= 2; // Dobra o dano
+                target.hp -= d; 
                 createFloatingText(`${targetKey}-target`, `💥 -${d}`, 'text-purple-400'); triggerShake(`${targetKey}-target`); playSfx('damage');
             }
             
@@ -859,8 +853,7 @@
                 if (gameState.terrain?.value === 'A') { if (finalHeal > 0) finalHeal += 2; if (finalShield > 0) finalShield += 2; }
                 
                 if (finalDmg > 0) {
-                    playSfx('attack');
-                    setTimeout(() => playSfx('damage'), 200);
+                    playSfx('attack'); setTimeout(() => playSfx('damage'), 200);
 
                     if (skill.pierce) { target.hp -= finalDmg; } 
                     else {
@@ -893,15 +886,16 @@
             else if (gameState.p2.hp <= 0) showEndModal("VITÓRIA!", "Oponente derrotado.", true);
         }
 
+        // CONTA TURNOS PARA A HABILIDADE ESPECIAL
         function endTurn() {
-            stopTurnTimer(); // Pára o timer atual
+            stopTurnTimer(); 
             if (gameMode === 'bot') {
                 if (currentTurn !== 'p1') return;
-                currentTurn = 'p2'; gameState.p1.ap = 3; gameState.p1.powerUsed = false; drawCards('p1', 1);
+                currentTurn = 'p2'; gameState.p2.turns++; gameState.p1.ap = 3; gameState.p1.powerUsed = false; drawCards('p1', 1);
                 document.getElementById('p2-action-text').innerText = "Pensando..."; updateUI();
                 setTimeout(botTurn, 1000);
             } else if (gameMode === 'online') {
-                currentTurn = 'p2'; gameState.p1.ap = 3; gameState.p1.powerUsed = false; drawCards('p1', 1);
+                currentTurn = 'p2'; gameState.p2.turns++; gameState.p1.ap = 3; gameState.p1.powerUsed = false; drawCards('p1', 1);
                 if (conn) conn.send({ type: 'END_TURN' }); updateUI();
             }
         }
@@ -914,9 +908,9 @@
                 let playable = state.hand.filter(c => c.cost <= state.ap);
                 if (state.ap <= 0 || playable.length === 0 || attempts >= 4 || Math.random() > botDifficulty) {
                     clearInterval(interval);
-                    currentTurn = 'p1'; gameState.p2.ap = 3; gameState.p2.powerUsed = false; drawCards('p2', 1);
+                    currentTurn = 'p1'; gameState.p1.turns++; gameState.p2.ap = 3; gameState.p2.powerUsed = false; drawCards('p2', 1);
                     document.getElementById('p2-action-text').innerText = "Aguardando..."; updateUI(); 
-                    startTurnTimer(); // Volta o turno para o humano e inicia o relógio
+                    startTurnTimer(); 
                     return;
                 }
                 let card = playable[Math.floor(Math.random() * playable.length)]; executeCardPlay(state.hand.indexOf(card), 'p2'); attempts++;
