@@ -48,7 +48,6 @@
         .suit-joker { color: #c084fc; }
         .class-card-img { width: 100%; height: 160px; object-fit: cover; object-position: top center; border-radius: 8px; }
         
-        /* CORREÇÃO DO TELEMÓVEL AQUI */
         @media (max-width: 768px) {
             #p1-hand { overflow-x: visible; justify-content: center; }
             #p1-hand .card { margin-left: -35px; transform: scale(0.95); transform-origin: bottom; }
@@ -62,7 +61,6 @@
         @keyframes pulseBlood { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
         
         .card-throw { position: fixed; z-index: 100; transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); pointer-events: none; }
-
         ::selection { background: transparent; }
     </style>
 </head>
@@ -110,7 +108,7 @@
         </div>
     </div>
 
-    <!-- Modais -->
+    <!-- Modais Online -->
     <div id="online-modal" class="hidden fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-4">
         <div class="bg-slate-800 border border-slate-700 p-6 rounded-2xl max-w-md w-full text-center">
             <h2 class="text-2xl font-bold mb-4 text-amber-500">Jogar Online com Amigo</h2>
@@ -145,7 +143,7 @@
         </div>
     </div>
 
-    <!-- Seleção de Classe -->
+    <!-- Seleção de Classe (CORRIGIDO: Emojis agora estão padronizados) -->
     <div id="class-screen" class="hidden z-10 bg-slate-800/95 p-4 md:p-6 rounded-2xl shadow-2xl text-center max-w-4xl w-[95%] md:w-full border border-slate-700 m-auto mt-10 md:mt-auto relative">
         <button onclick="goBackToMenu()" class="absolute top-4 left-4 bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded-lg font-bold text-slate-300 border border-slate-500 text-xs flex items-center gap-1">⬅️ Voltar</button>
         <h2 id="class-title" class="text-2xl md:text-3xl font-bold mb-4 md:mb-6 mt-6 md:mt-0 text-amber-500">Escolha sua Classe</h2>
@@ -158,7 +156,7 @@
             </div>
             <div onclick="chooseClass('Paus')" class="bg-slate-900 hover:bg-slate-700/80 p-2 md:p-3 rounded-xl cursor-pointer border border-slate-700 hover:border-amber-500 transition flex flex-col items-center">
                 <img src="besta.png" onerror="this.src='besta.jpg'" class="class-card-img mb-2 shadow-md">
-                <span class="font-bold text-sm md:text-base text-slate-200">♣ Besta (50 HP)</span>
+                <span class="font-bold text-sm md:text-base text-slate-200">♣️ Besta (50 HP)</span>
                 <span class="text-[9px] md:text-[10px] text-amber-400 mt-1 uppercase font-bold">Poder: -2 HP = Compra 1</span>
             </div>
             <div onclick="chooseClass('Copas')" class="bg-slate-900 hover:bg-slate-700/80 p-2 md:p-3 rounded-xl cursor-pointer border border-slate-700 hover:border-amber-500 transition flex flex-col items-center">
@@ -168,7 +166,7 @@
             </div>
             <div onclick="chooseClass('Ouros')" class="bg-slate-900 hover:bg-slate-700/80 p-2 md:p-3 rounded-xl cursor-pointer border border-slate-700 hover:border-amber-500 transition flex flex-col items-center">
                 <img src="mago.png" onerror="this.src='mago.jpg'" class="class-card-img mb-2 shadow-md">
-                <span class="font-bold text-sm md:text-base text-red-400">♦️️ Mago (30 HP)</span>
+                <span class="font-bold text-sm md:text-base text-red-400">♦️ Mago (30 HP)</span>
                 <span class="text-[9px] md:text-[10px] text-amber-400 mt-1 uppercase font-bold">Poder: 3 Dano (Perf)</span>
             </div>
         </div>
@@ -238,7 +236,6 @@
                     <img id="p1-avatar" class="w-14 h-14 md:w-16 md:h-16 rounded-full border-2 border-emerald-500 object-cover object-top shadow-lg">
                     <div class="w-32 md:w-48">
                         <div class="flex items-baseline gap-1 md:gap-2">
-                            <!-- NOME CORRIGIDO AQUI -->
                             <h2 id="p1-name" class="text-sm md:text-xl font-bold text-emerald-400 drop-shadow-md truncate max-w-[80px] md:max-w-[150px]">Você</h2>
                             <span id="p1-class-name" class="text-[10px] md:text-xs text-slate-400 uppercase hidden md:inline">Classe</span>
                         </div>
@@ -268,7 +265,6 @@
                     <div class="text-[10px] md:text-xs text-slate-500 font-bold mt-1 hidden md:block">Baralho: <b id="p1-deck-count" class="text-white">0</b></div>
                 </div>
             </div>
-            <!-- ÁREA DAS CARTAS CORRIGIDA (Mais altura no mobile para não cortar) -->
             <div id="p1-hand" class="flex md:justify-center h-48 md:h-44 px-2 md:px-4 pb-4 md:pb-2 w-full"></div>
         </div>
     </div>
@@ -485,7 +481,6 @@
         let p1Name = 'Guerreiro'; let p2Name = 'Oponente';
         let currentTurn = 'p1'; let peer = null, conn = null;
 
-        // ADICIONADO CONTADOR DE TURNOS "turns: 1"
         let gameState = {
             p1: { hp: 40, maxHp: 40, shield: 0, ap: 3, deck: [], hand: [], discard: [], class: '', powerUsed: false, turns: 1 },
             p2: { hp: 40, maxHp: 40, shield: 0, ap: 3, deck: [], hand: [], discard: [], class: '', powerUsed: false, turns: 1 },
@@ -593,10 +588,6 @@
             document.getElementById('game-screen').classList.remove('hidden');
             document.getElementById('combat-log').innerHTML = '<div class="text-slate-500 italic">A batalha começou!</div>';
 
-            // CORREÇÃO DOS NOMES AQUI (agora usa o p1Name introduzido)
-            document.getElementById('p1-name').innerText = p1Name;
-            document.getElementById('p2-name').innerText = p2Name;
-
             gameState.p1.maxHp = classMaxHp[gameState.p1.class]; gameState.p1.hp = gameState.p1.maxHp;
             gameState.p1.shield = 0; gameState.p1.ap = 3; gameState.p1.powerUsed = false; gameState.p1.turns = 1;
             
@@ -623,6 +614,7 @@
             return deck.sort(() => Math.random() - 0.5);
         }
 
+        /* LÓGICA DE CARTAS: NERF DO PALADINO (COPAS) APLICADO */
         function getCardSkill(card) {
             let name = "Hab."; let desc = ""; let dmg = 0; let heal = 0; let shield = 0; let selfDmg = 0; let pierce = false;
             let v = card.value;
@@ -644,8 +636,8 @@
                 desc = `Dmg:${dmg} (Recuo:${selfDmg})`;
             }
             else if(card.suit === 'Copas') {
-                if(v<='5') { name="Toque"; dmg=1; heal=1; } else if(v<='9') { name="Veredito"; dmg=3; heal=2; } else { name="Milagre"; dmg=5; heal=3; } 
-                desc = `Dmg:${dmg} | Cur:+${heal}`;
+                if(v<='5') { name="Toque"; dmg=1; heal=0; } else if(v<='9') { name="Veredito"; dmg=3; heal=1; } else { name="Milagre"; dmg=5; heal=2; } 
+                desc = heal > 0 ? `Dmg:${dmg} | Cur:+${heal}` : `Dmg:${dmg}`;
             }
             else if(card.suit === 'Ouros') {
                 pierce = true;
@@ -664,12 +656,15 @@
             }
         }
 
+        // CORREÇÃO DO NOME: FORÇAR ATUALIZAÇÃO NO UPDATE_UI
         function updateUI() {
+            document.getElementById('p1-name').textContent = p1Name;
+            document.getElementById('p2-name').textContent = p2Name;
+
             document.getElementById('p1-hp').innerText = gameState.p1.hp; document.getElementById('p1-shield').innerText = gameState.p1.shield; 
             updateHealthBar(gameState.p1.hp, gameState.p1.maxHp, 'p1-health-fill');
             updateManaPips(); document.getElementById('p1-deck-count').innerText = gameState.p1.deck.length;
 
-            // LÓGICA DA NOVA HABILIDADE ESPECIAL 2X (A cada 5 turnos)
             const hpBtn = document.getElementById('hero-power-btn');
             const isSpecial = (gameState.p1.turns % 5 === 0);
             
@@ -758,7 +753,6 @@
             const entry = document.createElement('div'); entry.innerHTML = msg; log.prepend(entry);
         }
 
-        // --- PODERES COM EFEITO ULTIMATE (2X) ---
         function useHeroPower(who = 'p1') {
             let state = gameState[who];
             if (state.ap < 2 || state.powerUsed || currentTurn !== who) return;
@@ -773,13 +767,13 @@
 
             if (state.class === 'Espadas') { 
                 let s = 2; if(gameState.terrain?.value==='A') s+=2; 
-                if(isSpecial) s *= 2; // Dobra o ganho
+                if(isSpecial) s *= 2; 
                 state.shield += s;
                 createFloatingText(`${who}-target`, `🛡️ +${s}`, 'text-blue-400'); playSfx('shield');
             } 
             else if (state.class === 'Paus') { 
                 if(isSpecial) {
-                    drawCards(who, 2); // Duas cartas, sem perder vida
+                    drawCards(who, 2); 
                     createFloatingText(`${who}-target`, '🃏 +2 Cartas', 'text-amber-400');
                 } else {
                     state.hp -= 2; drawCards(who, 1); 
@@ -788,13 +782,13 @@
             } 
             else if (state.class === 'Copas') { 
                 let h = 2; if(gameState.terrain?.value==='A') h+=2; 
-                if(isSpecial) h *= 2; // Dobra a cura
+                if(isSpecial) h *= 2; 
                 state.hp = Math.min(state.maxHp, state.hp + h); 
                 createFloatingText(`${who}-target`, `💚 +${h}`, 'text-green-400'); playSfx('heal');
             } 
             else if (state.class === 'Ouros') { 
                 let d = 3; if(gameState.terrain?.value==='K') d+=2; if(gameState.terrain?.value==='Q') d=Math.max(0, d-1); 
-                if(isSpecial) d *= 2; // Dobra o dano
+                if(isSpecial) d *= 2; 
                 target.hp -= d; 
                 createFloatingText(`${targetKey}-target`, `💥 -${d}`, 'text-purple-400'); triggerShake(`${targetKey}-target`); playSfx('damage');
             }
@@ -886,7 +880,6 @@
             else if (gameState.p2.hp <= 0) showEndModal("VITÓRIA!", "Oponente derrotado.", true);
         }
 
-        // CONTA TURNOS PARA A HABILIDADE ESPECIAL
         function endTurn() {
             stopTurnTimer(); 
             if (gameMode === 'bot') {
