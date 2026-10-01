@@ -66,6 +66,7 @@
 </head>
 <body id="main-body" class="h-screen flex flex-col relative select-none">
 
+    <!-- SISTEMA DE PROTEÇÃO (Anti-Cópia) -->
     <script>
         document.addEventListener('contextmenu', event => event.preventDefault()); 
         document.addEventListener('keydown', event => {
@@ -132,12 +133,12 @@
                 <p><b>⚡ Pontos de Ação (AP):</b> Tem 3 AP por turno. Cartas normais custam 1 ou 2 AP. Suprema (10) custa 3 AP.</p>
                 <p><b>🛡️ Escudo vs Vida:</b> O Escudo absorve dano antes da Vida. A classe <i>Mago</i> ignora Escudos.</p>
                 <p><b>🌍 Terrenos (A, J, Q, K):</b> Custam 2 AP e mudam as regras para AMBOS até outro terreno ser jogado.</p>
-                <p><b>🌟 Poder Supremo (Novo):</b> O poder da sua classe só é ativado a cada 5 turnos. Ele é totalmente <b>grátis (0 AP)</b> e causa um impacto massivo na batalha!</p>
+                <p><b>🌟 Poder Supremo:</b> O poder da sua classe só é ativado a cada 5 turnos. Ele é totalmente <b>grátis (0 AP)</b> e causa um impacto massivo na batalha!</p>
             </div>
         </div>
     </div>
 
-    <!-- SELEÇÃO DE CLASSE: TEXTOS DE HABILIDADE CORRIGIDOS PARA O EFEITO SUPREMO -->
+    <!-- SELEÇÃO DE CLASSE -->
     <div id="class-screen" class="hidden z-10 bg-slate-800/95 p-4 md:p-6 rounded-2xl shadow-2xl text-center max-w-4xl w-[95%] md:w-full border border-slate-700 m-auto mt-10 md:mt-auto relative">
         <button onclick="goBackToMenu()" class="absolute top-4 left-4 bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded-lg font-bold text-slate-300 border border-slate-500 text-xs flex items-center gap-1">⬅️ Voltar</button>
         <h2 id="class-title" class="text-2xl md:text-3xl font-bold mb-4 md:mb-6 mt-6 md:mt-0 text-amber-500">Escolha sua Classe</h2>
@@ -249,7 +250,6 @@
                 </div>
 
                 <div class="text-center flex gap-2 md:flex-col items-center">
-                    <!-- BOTÃO DO PODER -->
                     <button id="hero-power-btn" onclick="useHeroPower()" class="bg-slate-700 border border-slate-600 text-slate-400 text-[10px] md:text-xs font-bold py-1.5 md:py-2 px-2 md:px-4 rounded-lg md:rounded-xl transition shadow flex flex-col items-center opacity-50 cursor-not-allowed">
                         <span id="hero-power-name" class="uppercase">Poder Supremo</span>
                         <span id="hero-power-cost" class="text-[8px] md:text-[10px] mt-0.5 font-bold text-amber-400">Em 4 Turnos</span>
@@ -463,7 +463,6 @@
         const classNames = { 'Espadas': 'Cavaleiro', 'Paus': 'Besta', 'Copas': 'Paladino', 'Ouros': 'Mago' };
         const classMaxHp = { 'Espadas': 40, 'Paus': 50, 'Copas': 30, 'Ouros': 30 };
         
-        // HABILIDADES SUPREMAS REFEITAS (Apenas mostradas e ativadas no Turno 5)
         const heroPowers = {
             'Espadas': { name: 'Escudo Divino', cost: 0, desc: '+4 Armadura' },
             'Paus': { name: 'Faro Cego', cost: 0, desc: 'Compra 2 Cartas' },
@@ -659,19 +658,18 @@
 
             const hpBtn = document.getElementById('hero-power-btn');
             
-            // LÓGICA RIGOROSA DOS TURNOS (O botão só fica disponível no Turno 5, 10, 15...)
             const isSpecialTurn = (gameState.p1.turns > 0 && gameState.p1.turns % 5 === 0);
             
-            // Calcula visualmente quantos turnos faltam (Ex: Turno 1 -> Faltam 4, Turno 2 -> Faltam 3)
             let turnsLeft = 5 - (gameState.p1.turns % 5);
-            if (isSpecialTurn && gameState.p1.powerUsed) turnsLeft = 5; // Se já usou no turno 5, diz que faltam 5 para o próximo
-            if (isSpecialTurn && !gameState.p1.powerUsed) turnsLeft = 0; // Se é o turno 5 e não usou, faltam 0
+            if (isSpecialTurn && gameState.p1.powerUsed) turnsLeft = 5; 
+            if (isSpecialTurn && !gameState.p1.powerUsed) turnsLeft = 0; 
             
             // SE É O TURNO 5 E AINDA NÃO USOU
             if (isSpecialTurn && !gameState.p1.powerUsed && currentTurn === 'p1') {
                 hpBtn.className = "bg-amber-500 hover:bg-amber-400 border border-amber-300 text-slate-900 text-[10px] md:text-xs font-bold py-1.5 md:py-2 px-2 md:px-4 rounded-lg md:rounded-xl transition shadow flex flex-col items-center animate-pulse";
                 document.getElementById('hero-power-name').innerText = heroPowers[gameState.p1.class].name;
-                document.getElementById('hero-power-cost').innerText = "CLIQUE (GRÁTIS)";
+                // CORREÇÃO: Mostra a descrição real da habilidade em vez de "CLIQUE (GRÁTIS)"
+                document.getElementById('hero-power-cost').innerText = heroPowers[gameState.p1.class].desc;
                 hpBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                 hpBtn.disabled = false;
             } 
@@ -756,19 +754,17 @@
             const entry = document.createElement('div'); entry.innerHTML = msg; log.prepend(entry);
         }
 
-        // --- LÓGICA DO PODER (SÓ EXECUTA SE FOR O TURNO 5) ---
         function useHeroPower(who = 'p1') {
             let state = gameState[who];
             let isSpecialTurn = (state.turns > 0 && state.turns % 5 === 0);
             
-            // Barreira de segurança extra: Se não for o turno 5, ou já usou, cancela imediatamente.
             if (!isSpecialTurn || state.powerUsed || currentTurn !== who) return;
             
             state.powerUsed = true;
             let targetKey = who === 'p1' ? 'p2' : 'p1'; let target = gameState[targetKey];
             let nameLabel = who === 'p1' ? p1Name : p2Name;
             
-            logAction(`⚡ <b>${nameLabel}</b> ativou o Poder Supremo (Grátis)!`);
+            logAction(`⚡ <b>${nameLabel}</b> ativou o Poder Supremo!`);
             playSfx('power');
 
             if (state.class === 'Espadas') { 
@@ -895,11 +891,7 @@
             let state = gameState.p2; let attempts = 0;
             
             let isSpecialTurn = (state.turns > 0 && state.turns % 5 === 0);
-            
-            // Bot usa a habilidade se for o turno 5 (grátis) e não usou ainda
-            if (isSpecialTurn && !state.powerUsed) { 
-                processHeroPower('p2'); 
-            }
+            if (isSpecialTurn && !state.powerUsed) { processHeroPower('p2'); }
 
             const interval = setInterval(() => {
                 let playable = state.hand.filter(c => c.cost <= state.ap);
